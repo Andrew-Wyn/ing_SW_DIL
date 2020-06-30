@@ -7,6 +7,7 @@ import json
 
 import document_CNN
 
+MODEL_PATH = ""
 
 app = Flask(__name__)
 
