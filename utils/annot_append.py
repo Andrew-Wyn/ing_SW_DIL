@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+
 # na strunzata galattica
+
 import json
 import sys
 
