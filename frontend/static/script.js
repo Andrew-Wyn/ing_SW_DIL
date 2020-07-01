@@ -62,9 +62,11 @@ function responseReceived(response) {
 }
 
 function dataReady(data) {
-    console.log(data);
-    image.setAttribute('src', "data:image/png;base64," + data[0].snapshot);
-    image.removeAttribute('hidden');
+    if (data.length != 0) {
+        console.log(data);
+        image.setAttribute('src', "data:image/png;base64," + data[0].snapshot);
+        image.removeAttribute('hidden');
+    }
 
     window.setTimeout(takePicture, 200);
 }
