@@ -44,6 +44,7 @@ class InferenceConfig(Config):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
 
+
 class Detectron:
     def __init__(self, model_path):
         self._classes = ['BG', 'tesserino']

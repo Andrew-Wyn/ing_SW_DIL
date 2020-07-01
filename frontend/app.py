@@ -15,9 +15,9 @@ app = Flask(__name__)
 def recognize():
     image = b64decode(request.json["image"]) # bytes object (representing the image)
     data = document_CNN.recognize(image) # returns a list of dicts dict
-    for entry in data:
-        entry["snapshot"] = b64encode(entry["snapshot"]).decode()
-    return json.dumps(data)
+    #for entry in data:
+    #    entry["snapshot"] = b64encode(entry["snapshot"]).decode()
+    return json.dumps(list(data))
 
 
 @app.route('/')

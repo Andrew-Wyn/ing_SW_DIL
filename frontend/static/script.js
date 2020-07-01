@@ -19,17 +19,10 @@ function fileRead(event) {
     .catch(error);
 }
 
-const toBase64 = file => new Promise((resolve, reject) => {    
+const toBase64 = file => new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
 });
-
-// async function Main() {
-//    const file = document.querySelector('#myfile').files[0];
-//    console.log(await toBase64(file));
-// }
-
-// Main();
 
 function update(response) {
     if (response.status != 200) {
@@ -49,11 +42,14 @@ function error(error) {
     console.error('Error:', error);
 }
 
-/*
-$("button").click(function(){
-    $.ajax({url: "/recognize", success: function (result){
-      // callback
-      $("#;
-    }});
-  });
-*/
+function askCamera() {
+    window.navigator.mediaDevices.getUserMedia({video: true}).then(setStream);
+}
+
+window.onload = askCamera
+
+function setStream(mediaStream) {
+    document.getElementById("videoPreview").srcObject = mediaStream
+}
+
+/*stream = mediaStream.getVideoTracks()[0]*/
