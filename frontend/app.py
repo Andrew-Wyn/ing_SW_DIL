@@ -1,6 +1,5 @@
 #!/bin/env python3
 
-
 from flask import Flask, request, render_template
 from base64 import b64decode, b64encode
 import json
@@ -24,3 +23,7 @@ def recognize():
 @app.route('/')
 def index():
     return render_template("index.html")
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port='8080', ssl_context='adhoc')
