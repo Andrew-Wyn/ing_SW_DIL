@@ -1,12 +1,42 @@
-function submit() {
-    const file = document.getElementById("fileInput").files[0];
-    const reader = new FileReader();
-    reader.onload = fileRead;
-    reader.readAsBinaryString(file);
+window.addEventListener("load", initPage);
+
+function initPage(e) {
+    video = document.getElementById("videoPreview");
+    image = document.getElementById("image");
+    canvas = document.getElementById("canvas");
+    context = canvas.getContext('2d');
+
+    window.navigator.mediaDevices.getUserMedia({video: true})
+        .then(setCameraStream)
+        .catch(getUserMediaError);
 }
 
-function fileRead(event) {
-    const data = { image: btoa(event.target.result) };
+function setCameraStream(mediaStream) {
+    video.addEventListener("canplay", videoReady)
+    video.srcObject = mediaStream
+}
+
+function videoReady(e) {
+    button.removeAttribute("disabled");
+}
+
+function takePicture() {
+    button.setAttribute("disabled", "disabled");
+
+    w = video.videoWidth
+    h = video.videoHeight
+
+    canvas.width = w
+    canvas.height = h
+
+    context.drawImage(video, 0, 0, w, h);
+    var data = canvas.toDataURL('image/png');
+    data = data.replace(/^[^,]*,\s*/, "");
+    makeRequest(data);
+}
+
+function makeRequest(imgData) {
+    const data = { image: imgData };
 
     fetch('/recognize', {
         method: 'POST',
@@ -15,41 +45,38 @@ function fileRead(event) {
         },
         body: JSON.stringify(data),
     })
-    .then(update)
-    .catch(error);
+    .then(responseReceived)
+    .catch(fetchError);
 }
 
-const toBase64 = file => new Promise((resolve, reject) => {
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-});
-
-function update(response) {
+function responseReceived(response) {
     if (response.status != 200) {
-        alert("Errore " + response.status);
+        console.log("Errore " + response.status);
+        window.setTimeout(takePicture, 200);
         return;
     }
 
-    data = response.json().then(dataReady); // <-- TODO: ricorda .error()
+    data = response.json()
+        .then(dataReady)
+        .catch(responseJsonError);
 }
 
 function dataReady(data) {
-    console.log('Success:', data);
-    document.getElementById("canvas").setAttribute("src", "data:image/png;base64," + data[0].snapshot);
+    console.log(data);
+    image.setAttribute('src', "data:image/png;base64," + data[0].snapshot);
+    image.removeAttribute('hidden');
+
+    window.setTimeout(takePicture, 200);
 }
 
-function error(error) {
+function fetchError(error) {
     console.error('Error:', error);
 }
 
-function askCamera() {
-    window.navigator.mediaDevices.getUserMedia({video: true}).then(setStream);
+function responseJsonError(error) {
+    console.error('Error:', error);
 }
 
-window.onload = askCamera
-
-function setStream(mediaStream) {
-    document.getElementById("videoPreview").srcObject = mediaStream
+function getUserMediaError(error) {
+    console.error('Error:', error);
 }
-
-/*stream = mediaStream.getVideoTracks()[0]*/
