@@ -1,6 +1,8 @@
 # ing\_SW\_DIL
 document recognition
 
+Initialize project with `pipenv install`
+
 ## Yolo
 https://machinelearningmastery.com/how-to-perform-object-detection-with-yolov3-in-keras/
 

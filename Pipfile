@@ -4,10 +4,21 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
 
 [packages]
-flask = "*"
+numpy = "*"
+scipy = "*"
+matplotlib = "*"
+scikit-image = "*"
+tensorflow = "==1.13.1"
+opencv-python = "*"
+h5py = "*"
+imgaug = "*"
+Flask = "*"
+Pillow = "*"
+Cython = "*"
+Keras = "==2.0.8"
+mrcnn = {editable = true, git = "https://github.com/matterport/Mask_RCNN.git"}
 
 [requires]
 python_version = "3.7"
