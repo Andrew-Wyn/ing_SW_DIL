@@ -61,18 +61,32 @@ class Detectron:
         image = np.frombuffer(image, np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        
+
         results = self._model.detect([image], verbose=1)
         # Display results
         r = results[0]
 
-        return r["rois"]
+        ret = []
 
-        # /Users/lucamoroni/Downloads/tesserino21.jpg
-        
+        for roi, class_id in zip(r["rois"], r["class_ids"]):
+            y1, x1, y2, x2 = roi
+            snapshot = image[y1:y2+1,x1:x2+1,:]
+            snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
+            _, snapshot = cv2.imencode(".png", snapshot)
+
+            cur_ret = {
+                "type": str(class_id),
+                "snapshot": snapshot.tobytes(),
+                "attributes": {
+                }
+            }
+
+            ret.append(cur_ret)
+
+        return ret
+
 
 def recognize_dummy(image):
-
     return [{
        "type": "Carta d'Identità",
         "snapshot": image,
@@ -84,9 +98,14 @@ def recognize_dummy(image):
 
 
 if __name__ == "__main__":
-    d = Detectron("mask_rcnn_.1593520466.6446981.h5")
-    with open("/Users/lucamoroni/Downloads/tesserino21.jpg", "rb") as f:
+    d = Detectron("mask_rcnn_.1593504868.7108881.h5")
+    with open("test1.jpg", "rb") as f:
         bs = f.read()
-    rois = d.recognize(bs)
-    breakpoint()
+    rets = d.recognize(bs)
     print()
+    if len(rets) == 0:
+        print("Nothing found")
+    else:
+        print("Found something")
+        with open("output.png", "wb") as f:
+            f.write(rets[0]["snapshot"])
