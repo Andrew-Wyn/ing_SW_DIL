@@ -2,8 +2,8 @@ window.addEventListener("load", initPage);
 
 function initPage(e) {
     video = document.getElementById("videoPreview");
-    image = document.getElementById("image");
     canvas = document.getElementById("canvas");
+    imageList = document.getElementById("imageList");
     context = canvas.getContext('2d');
 
     window.navigator.mediaDevices.getUserMedia({video: true})
@@ -62,10 +62,14 @@ function responseReceived(response) {
 }
 
 function dataReady(data) {
+    console.log(data)
     if (data.length != 0) {
-        console.log(data);
-        image.setAttribute('src', "data:image/png;base64," + data[0].snapshot);
-        image.removeAttribute('hidden');
+        var i;
+        for (i = 0; i < data.length; i++) {
+            var elem = document.createElement("img");
+            elem.setAttribute('src', "data:image/png;base64," + data[i].snapshot);
+            imageList.appendChild(elem);
+        }
     }
 
     window.setTimeout(takePicture, 200);
