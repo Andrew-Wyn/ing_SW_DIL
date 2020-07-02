@@ -3,6 +3,7 @@
 from flask import Flask, request, render_template
 from base64 import b64decode, b64encode
 import json
+import time
 
 from document_CNN import Detectron
 
@@ -18,7 +19,10 @@ detectron = Detectron(config["weights"], config["classes"])
 @app.route('/recognize', methods=["POST"])
 def recognize():
     image = b64decode(request.json["image"]) # bytes object (representing the image)
-    data = detectron.recognize(image) # returns a list of dicts dict
+    start_time = time.time()
+    data = detectron.recognize(image) # returns a list of dicts dict        
+    elapsed_time = time.time() - start_time
+    print("ELAPSED TIME: ", elapsed_time)
     for entry in data:
         entry["snapshot"] = b64encode(entry["snapshot"]).decode()
     return json.dumps(data)
