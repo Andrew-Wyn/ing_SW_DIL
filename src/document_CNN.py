@@ -9,6 +9,7 @@ import tensorflow as tf
 
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
+from pytesseract import image_to_data, Output
 
 
 class InferenceConfig(Config):
@@ -64,6 +65,8 @@ class Detectron:
         for roi, class_id in zip(r["rois"], r["class_ids"]):
             y1, x1, y2, x2 = roi
             snapshot = image[y1:y2+1,x1:x2+1,:]
+            ocr_data = image_to_data(snapshot, lang="ita", output_type=Output.DICT)
+            ocr_data["conf"] = [int(c) for c in ocr_data["conf"]]
             snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
             _, snapshot = cv2.imencode(".png", snapshot)
 
@@ -71,6 +74,10 @@ class Detectron:
                 "type": str(class_id),
                 "snapshot": snapshot.tobytes(),
                 "attributes": {
+                    t: c
+                    for t, c
+                    in zip(ocr_data["text"], ocr_data["conf"])
+                    if c > 50
                 }
             }
 

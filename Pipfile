@@ -20,6 +20,7 @@ Cython = "*"
 Keras = "==2.0.8"
 mrcnn = {editable = true, git = "https://github.com/matterport/Mask_RCNN.git"}
 cryptography = "*"
+pytesseract = "*"
 
 [requires]
 python_version = "3.7"
