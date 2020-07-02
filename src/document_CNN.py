@@ -35,13 +35,13 @@ class InferenceConfig(Config):
 
 
 class Detectron:
-    def __init__(self, model_path):
+    def __init__(self, weights_path, classes):
         config = InferenceConfig()
         config.display()
 
-        self._classes = ['BG', 'tesserino']
+        self._classes = list(classes)
         self._model = modellib.MaskRCNN(mode="inference", config=config,  model_dir="./")
-        self._model.load_weights(model_path, by_name=True)
+        self._model.load_weights(weights_path, by_name=True)
         self._graph = tf.get_default_graph()
 
     def recognize(self, image):
@@ -90,7 +90,9 @@ def recognize_dummy(image):
 
 
 if __name__ == "__main__":
-    d = Detectron("mask_rcnn_.1593504868.7108881.h5")
+    with open("config.json") as f:
+        config = json.load(f)
+    d = Detectron(config["weights"], config["classes"])
     with open("test1.jpg", "rb") as f:
         bs = f.read()
     rets = d.recognize(bs)

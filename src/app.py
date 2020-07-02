@@ -4,17 +4,21 @@ from flask import Flask, request, render_template
 from base64 import b64decode, b64encode
 import json
 
-import document_CNN
+from document_CNN import Detectron
 
-MODEL_PATH = ""
 
 app = Flask(__name__)
+
+with open("config.json") as f:
+    config = json.load(f)
+
+detectron = Detectron(config["weights"], config["classes"])
 
 
 @app.route('/recognize', methods=["POST"])
 def recognize():
     image = b64decode(request.json["image"]) # bytes object (representing the image)
-    data = document_CNN.recognize(image) # returns a list of dicts dict
+    data = detectron.recognize(image) # returns a list of dicts dict
     for entry in data:
         entry["snapshot"] = b64encode(entry["snapshot"]).decode()
     return json.dumps(data)
