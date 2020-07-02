@@ -7,6 +7,8 @@ import cv2
 # from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
 
+import tensorflow as tf
+
 # # Root directory of the project
 # ROOT_DIR = os.path.abspath("./")
 
@@ -47,13 +49,13 @@ class InferenceConfig(Config):
 
 class Detectron:
     def __init__(self, model_path):
-        self._classes = ['BG', 'tesserino']
-
         config = InferenceConfig()
         config.display()
 
+        self._classes = ['BG', 'tesserino']
         self._model = modellib.MaskRCNN(mode="inference", config=config,  model_dir="./")
         self._model.load_weights(model_path, by_name=True)
+        self._graph = tf.get_default_graph()
 
     def recognize(self, image):
         # Run object detection
@@ -62,7 +64,9 @@ class Detectron:
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        results = self._model.detect([image], verbose=1)
+        with self._graph.as_default():
+            results = self._model.detect([image], verbose=1)
+
         # Display results
         r = results[0]
 
