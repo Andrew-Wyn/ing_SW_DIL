@@ -110,7 +110,7 @@ class Detectron:
 
             ocr_data["conf"] = [int(c) for c in ocr_data["conf"]]
             ocr_data = [OcrRecord(*t) for t in zip(ocr_data["conf"], ocr_data["text"], ocr_data["top"], ocr_data["left"], ocr_data["width"], ocr_data["height"])]
-            ocr_data = [ocr for ocr in ocr_data if ocr.conf >= self._classes[class_name]["min_conf"]]
+            ocr_data = [ocr for ocr in ocr_data if ocr.conf >= self._classes[class_name]["min_conf"] and ocr.text.strip()]
 
             snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
             _, snapshot = cv2.imencode(".png", snapshot)
@@ -138,8 +138,10 @@ class Detectron:
                         if rule.search(ocr.text):
                             break
                 else:
-                    cur_ret["attributes"][name] = ocr.text
-                    region_useds.add(name)
+                    continue
+
+                cur_ret["attributes"][name] = ocr.text
+                region_useds.add(name)
 
             ret.append(cur_ret)
 
