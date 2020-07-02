@@ -4,25 +4,12 @@ import json
 import datetime
 import numpy as np
 import cv2
-# from mrcnn.visualize import display_instances
 import matplotlib.pyplot as plt
-
 import tensorflow as tf
 
-# # Root directory of the project
-# ROOT_DIR = os.path.abspath("./")
-
-# # Import Mask RCNN
-# sys.path.append(ROOT_DIR)  # To find local version of the library
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
 
-# # Path to trained weights file
-# COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
-
-# # Directory to save logs and model checkpoints, if not provided
-# # through the command line argument --logs
-# DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 
 class InferenceConfig(Config):
     """Configuration for training on the toy  dataset.
@@ -75,6 +62,7 @@ class Detectron:
         for roi, class_id in zip(r["rois"], r["class_ids"]):
             y1, x1, y2, x2 = roi
             snapshot = image[y1:y2+1,x1:x2+1,:]
+            # snapshot = image[x1:x2+1,y1:y2+1,:]
             snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
             _, snapshot = cv2.imencode(".png", snapshot)
 
