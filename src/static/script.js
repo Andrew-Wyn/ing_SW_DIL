@@ -64,6 +64,9 @@ function responseReceived(response) {
 function dataReady(data) {
     console.log(data)
     if (data.length != 0) {
+        while (imageList.firstChild) {
+            imageList.removeChild(imageList.lastChild);
+        }
         var i;
         for (i = 0; i < data.length; i++) {
             var elem = document.createElement("img");
