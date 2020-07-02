@@ -72,7 +72,7 @@ function dataReady(data) {
         }
     }
 
-    window.setTimeout(takePicture, 200);
+    window.setTimeout(takePicture, 5);
 }
 
 function fetchError(error) {
