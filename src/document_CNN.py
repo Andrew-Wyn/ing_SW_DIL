@@ -137,6 +137,9 @@ class Detectron:
                     if ocr.conf >= class_["min_conf"]
                         and ocr.text]
 
+            for o in ocr_data:
+                print(o)
+
             snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
             _, snapshot = cv2.imencode(".png", snapshot)
 
