@@ -103,15 +103,33 @@ class Detectron:
         ret = []
 
         for roi, class_id in zip(r["rois"], r["class_ids"]):
-            class_name = self._class_names[class_id-1]
             y1, x1, y2, x2 = roi
+            class_name = self._class_names[class_id-1]
+            class_ = self._classes[class_name]
+            regions = class_["regions"]
+
             snapshot = image[y1:y2+1,x1:x2+1,:]
             snapshot_h, snapshot_w, _ = snapshot.shape
-            ocr_data = image_to_data(snapshot, lang=self._classes[class_name]["lang"], output_type=Output.DICT)
+            ocr_data = image_to_data(
+                    snapshot, lang=class_["lang"], output_type=Output.DICT)
 
             ocr_data["conf"] = [int(c) for c in ocr_data["conf"]]
-            ocr_data = [OcrRecord(*t) for t in zip(ocr_data["conf"], map(str.strip, ocr_data["text"]), ocr_data["left"], ocr_data["top"], ocr_data["width"], ocr_data["height"])]
-            ocr_data = [ocr for ocr in ocr_data if ocr.conf >= self._classes[class_name]["min_conf"] and ocr.text]
+
+            ocr_data = [
+                    OcrRecord(*t)
+                    for t in zip(
+                        ocr_data["conf"],
+                        map(str.strip, ocr_data["text"]),
+                        ocr_data["left"],
+                        ocr_data["top"],
+                        ocr_data["width"],
+                        ocr_data["height"])]
+
+            ocr_data = [
+                    ocr
+                    for ocr in ocr_data
+                    if ocr.conf >= class_["min_conf"]
+                        and ocr.text]
 
             snapshot = cv2.cvtColor(snapshot, cv2.COLOR_RGB2BGR)
             _, snapshot = cv2.imencode(".png", snapshot)
@@ -121,8 +139,6 @@ class Detectron:
                 "snapshot": snapshot.tobytes(),
                 "attributes": {}
             }
-
-            regions = self._classes[class_name]["regions"]
 
             found = set()
             needed = {r["name"] for r in regions if r["needed"]}
