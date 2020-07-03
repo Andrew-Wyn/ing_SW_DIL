@@ -20,7 +20,7 @@ detectron = Detectron(config["weights"], config["classes"])
 def recognize():
     image = b64decode(request.json["image"]) # bytes object (representing the image)
     start_time = time.time()
-    data = detectron.recognize(image) # returns a list of dicts dict        
+    data = detectron.recognize(image) # returns a list of dicts dict
     elapsed_time = time.time() - start_time
     print("ELAPSED TIME: ", elapsed_time)
     for entry in data:

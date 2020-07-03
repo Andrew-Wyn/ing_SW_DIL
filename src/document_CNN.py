@@ -58,6 +58,7 @@ class InferenceConfig(Config):
 #   }
 # }
 
+
 def check_box(snap_w, snap_h, ocr_x1, ocr_y1, ocr_w, ocr_h, x1, y1, x2, y2):
     x1 = int(snap_w*x1)
     x2 = int(snap_w*x2)
@@ -121,18 +122,18 @@ class Detectron:
                 "attributes": {}
             }
 
-            region_useds = set()
+            found = set()
 
             for ocr in ocr_data:
                 for region in self._classes[class_name]["regions"]:
                     name = region["name"]
                     rule = region["rule"]
 
-                    if name in region_useds:
+                    if name in found:
                         continue
 
                     if region["type"] == "box":
-                        if check_box(snapshot_w, snapshot_h, ocr.x, ocr.y, ocr.w, ocr.h, *rule): 
+                        if check_box(snapshot_w, snapshot_h, ocr.x, ocr.y, ocr.w, ocr.h, *rule):
                             break
                     elif region["type"] == "regex":
                         if rule.search(ocr.text):
@@ -141,7 +142,7 @@ class Detectron:
                     continue
 
                 cur_ret["attributes"][name] = ocr.text
-                region_useds.add(name)
+                found.add(name)
 
             ret.append(cur_ret)
 
