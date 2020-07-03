@@ -122,10 +122,13 @@ class Detectron:
                 "attributes": {}
             }
 
+            regions = self._classes[class_name]["regions"]
+
             found = set()
+            needed = {r["name"] for r in regions if r["needed"]}
 
             for ocr in ocr_data:
-                for region in self._classes[class_name]["regions"]:
+                for region in regions:
                     name = region["name"]
                     rule = region["rule"]
 
