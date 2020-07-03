@@ -6,7 +6,19 @@ function initPage(e) {
     imageList = document.getElementById("imageList");
     context = canvas.getContext('2d');
 
-    window.navigator.mediaDevices.getUserMedia({video: true})
+    const constraints = {
+        audio: false,
+        video: {
+            width: {
+                ideal: 1920
+            },
+            height: {
+                ideal: 1080
+            }
+        }
+    };
+
+    window.navigator.mediaDevices.getUserMedia(constraints)
         .then(setCameraStream)
         .catch(getUserMediaError);
 }
@@ -23,14 +35,17 @@ function videoReady(e) {
 function takePicture() {
     button.setAttribute("disabled", "disabled");
 
-    w = video.videoWidth
-    h = video.videoHeight
+    w = video.videoWidth;
+    h = video.videoHeight;
+
+    console.log(w);
+    console.log(h);
 
     canvas.width = w
     canvas.height = h
 
     context.drawImage(video, 0, 0, w, h);
-    var data = canvas.toDataURL('image/png');
+    var data = canvas.toDataURL('image/jpg', .8);
     data = data.replace(/^[^,]*,\s*/, "");
     makeRequest(data);
 }
