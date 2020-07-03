@@ -10,7 +10,7 @@ import re
 
 from mrcnn.config import Config
 from mrcnn import model as modellib, utils
-from pytesseract import image_to_data, Output
+from pytesseract import image_to_data, Output, TesseractError
 from collections import namedtuple
 
 
@@ -110,8 +110,14 @@ class Detectron:
 
             snapshot = image[y1:y2+1,x1:x2+1,:]
             snapshot_h, snapshot_w, _ = snapshot.shape
-            ocr_data = image_to_data(
-                    snapshot, lang=class_["lang"], output_type=Output.DICT)
+
+            try:
+                ocr_data = image_to_data(
+                        snapshot, lang=class_["lang"], output_type=Output.DICT)
+            except TesseractError:
+                print(f"OCR error for class {class_name}: "
+                        f"maybe bad language '{class_['lang']}'?")
+                continue
 
             ocr_data["conf"] = [int(c) for c in ocr_data["conf"]]
 
