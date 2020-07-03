@@ -145,21 +145,12 @@ class Detectron:
 
                 cur_ret["attributes"][name] = ocr.text
                 found.add(name)
+                needed.discard(name)
 
-            ret.append(cur_ret)
+            if not needed:
+                ret.append(cur_ret)
 
         return ret
-
-
-def recognize_dummy(image):
-    return [{
-       "type": "Carta d'Identità",
-        "snapshot": image,
-        "attributes": {
-            "name": "",
-            "id": ""
-        }
-    }]
 
 
 if __name__ == "__main__":
