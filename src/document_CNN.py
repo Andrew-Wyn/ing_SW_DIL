@@ -111,9 +111,13 @@ class Detectron:
             snapshot = image[y1:y2+1,x1:x2+1,:]
             snapshot_h, snapshot_w, _ = snapshot.shape
 
+            snapshot_gray = cv2.cvtColor(snapshot, cv2.COLOR_RGB2GRAY)
+
             try:
                 ocr_data = image_to_data(
-                        snapshot, lang=class_["lang"], output_type=Output.DICT)
+                        snapshot_gray,
+                        lang=class_["lang"],
+                        output_type=Output.DICT)
             except TesseractError:
                 print(f"OCR error for class {class_name}: "
                         f"maybe bad language '{class_['lang']}'?")
