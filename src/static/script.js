@@ -38,15 +38,13 @@ function takePicture() {
     w = video.videoWidth;
     h = video.videoHeight;
 
-    console.log(w);
-    console.log(h);
-
     canvas.width = w
     canvas.height = h
 
     context.drawImage(video, 0, 0, w, h);
     var data = canvas.toDataURL('image/jpg', .8);
     data = data.replace(/^[^,]*,\s*/, "");
+
     makeRequest(data);
 }
 
@@ -86,6 +84,10 @@ function dataReady(data) {
         for (i = 0; i < data.length; i++) {
             var elem = document.createElement("img");
             elem.setAttribute('src', "data:image/png;base64," + data[i].snapshot);
+            imageList.appendChild(elem);
+
+            elem = document.createTextNode(
+                JSON.stringify(data[i].attributes, null, 4));
             imageList.appendChild(elem);
         }
     }
