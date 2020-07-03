@@ -123,12 +123,10 @@ class Detectron:
                         f"maybe bad language '{class_['lang']}'?")
                 continue
 
-            ocr_data["conf"] = [int(c) for c in ocr_data["conf"]]
-
             ocr_data = [
                     OcrRecord(*t)
                     for t in zip(
-                        ocr_data["conf"],
+                        map(int, ocr_data["conf"]),
                         map(str.strip, ocr_data["text"]),
                         ocr_data["left"],
                         ocr_data["top"],
