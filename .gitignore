@@ -172,6 +172,8 @@ Temporary Items
 
 ## GENERALS
 
+*.aux
+*.pdf
 .vscode/
 src/config.json
 src/model/

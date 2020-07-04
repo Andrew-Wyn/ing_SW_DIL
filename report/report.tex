@@ -1,0 +1,70 @@
+\documentclass[12pt,A4]{article}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\title{Riconoscimento Documenti}
+\author{Simone Cimarelli \and Vittorio Mignini \and Luca Moroni}
+\date{9 luglio 2020}
+
+\maketitle
+
+\begin{abstract}
+    %TODO
+\end{abstract}
+
+\section{Obbiettivi}
+
+Implementare tramite una libreria Python l'object detection all'interno
+di immagini di una serie di tipologie di documenti estensibili dal
+client, e il riconoscimento dei caratteri per classi di dati specifiche
+per gli stessi.\\
+Sarà fornito anche una possibile implementazione di un frontend basato
+su tecnologie browser
+
+\section{Analisi dei Requisiti}
+\subsection{Glossario}
+
+\begin{description}
+    \item[\textsc{CNN}] Convolutional Neural Network, rete neurale
+        convoluzionale, adatta alla classificazione di intere immagini.
+
+    \item[Mask \textsc{R-CNN}] egion-based Convolutional Neural Network,
+        libreria basata su Resnet 101 e tecnologia \textsc{CNN} in grado
+        di effettuare segmentazione di immagini.
+
+    \item[Segmentazione] Individuazione delle aree di un'immagine
+        contenenti determinati oggetti.
+
+    \item[Training] ``Allenamento'' della rete neurale al riconoscimento
+        di uno o più tipi di documento
+
+    \item[\textsc{OCR}] Optical Character Recognition, riconoscimento
+        ottico del testo di un documento.
+
+\end{description}
+
+\subsection{Analisi Requisiti Utente}
+
+\begin{itemize}
+    \item Ottenere un elenco dei documenti visibili all'interno di
+        un'immagine e le componenti testuali specifiche in esso
+        riconoscibili.
+    \item Avere la possibilità di definire la natura dei documenti
+        oggetto del riconoscimento e delle informazioni testuali
+        rilevanti in essi contenute
+    \item Fornire strumenti per il retraining della rete neurale per
+        nuovi tipi di documento
+\end{itemize}
+
+\subsection{Analisi Requisiti Sistema}
+
+\begin{itemize}
+    \item Target: Python 3.7, Tensorflow 1.13.1, Keras 2.0.8, ultime
+        versioni certamente compatibili con la libreria Mask
+        \textsc{R-CNN} utilizzata in questo progetto
+    \item Mettere a disposizione un'implementazione di riferimento di
+        frontend compatibile con la libreria
+\end{itemize}
+
+\end{document}
