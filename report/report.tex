@@ -1,6 +1,8 @@
-\documentclass[12pt,A4]{article}
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
+\usepackage{lmodern}
 
 \begin{document}
 
@@ -27,12 +29,12 @@ su tecnologie browser
 \subsection{Glossario}
 
 \begin{description}
-    \item[\textsc{CNN}] Convolutional Neural Network, rete neurale
+    \item[CNN] Convolutional Neural Network, rete neurale
         convoluzionale, adatta alla classificazione di intere immagini.
 
-    \item[Mask \textsc{R-CNN}] egion-based Convolutional Neural Network,
-        libreria basata su Resnet 101 e tecnologia \textsc{CNN} in grado
-        di effettuare segmentazione di immagini.
+    \item[Mask R-CNN] egion-based Convolutional Neural Network, libreria
+        basata su Resnet 101 e tecnologia CNN in grado di effettuare
+        segmentazione di immagini.
 
     \item[Segmentazione] Individuazione delle aree di un'immagine
         contenenti determinati oggetti.
@@ -40,8 +42,8 @@ su tecnologie browser
     \item[Training] ``Allenamento'' della rete neurale al riconoscimento
         di uno o più tipi di documento
 
-    \item[\textsc{OCR}] Optical Character Recognition, riconoscimento
-        ottico del testo di un documento.
+    \item[OCR] Optical Character Recognition, riconoscimento ottico del
+        testo di un documento.
 
 \end{description}
 
@@ -62,8 +64,8 @@ su tecnologie browser
 
 \begin{itemize}
     \item Target: Python 3.7, Tensorflow 1.13.1, Keras 2.0.8, ultime
-        versioni certamente compatibili con la libreria Mask
-        \textsc{R-CNN} utilizzata in questo progetto
+        versioni certamente compatibili con la libreria Mask R-CNN
+        utilizzata in questo progetto
     \item Mettere a disposizione un'implementazione di riferimento di
         frontend compatibile con la libreria
 \end{itemize}
