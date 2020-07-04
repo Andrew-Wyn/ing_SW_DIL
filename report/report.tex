@@ -1,6 +1,7 @@
 \documentclass[12pt,A4]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
+\usepackage{tikz-uml}
 
 \begin{document}
 
@@ -67,5 +68,67 @@ su tecnologie browser
     \item Mettere a disposizione un'implementazione di riferimento di
         frontend compatibile con la libreria
 \end{itemize}
+
+\section{Architettura del Sistema}
+
+\begin{tikzpicture}
+    \begin{umlpackage}[x=0, y=0]{mrcnn}
+        \umlclass[x=0, y=0]{MRCNN} {
+            + keras\_model
+        }{
+            + load\_weights(file\_path, by\_name)\\
+            + detect(images, verbose)
+        }
+        \umlsimpleclass[x=5, y=1]{Config}
+        \umlclass[]{Dataset}{
+        }{
+            + load\_mask\\
+            + image\_reference
+        }
+    \end{umlpackage}
+
+    \begin{umlpackage}[x=0, y=-6]{training}
+        \umlclass[x=0, y=0]{TrainingConfig} {
+            + NAME\\
+            + IMAGES\_PER\_GPU\\
+            + NUM\_CLASSES\\
+            + STEPS\_PER\_EPOCH\\
+            + LEARNING\_RATE\\
+            + DETECTION\_MIN\_CONFIDENCE
+        }{}
+        \umlclass[]{CustomDataset}{
+        }{
+            + load\_custom\\
+            + load\_mask\\
+            + image\_reference
+        }
+    \end{umlpackage}
+
+    \begin{umlpackage}[x=0, y=-12]{documentCNN}
+        \umlclass[x=0, y=0]{OcrRecord}{
+            + conf\\
+            + text\\
+            + x\\
+            + y\\
+            + w\\
+            + h
+        }{}
+        \umlclass[x=0, y=0]{InferenceConfig} {
+            + NAME\\
+            + IMAGES\_PER\_GPU\\
+            + NUM\_CLASSES\\
+            + STEPS\_PER\_EPOCH\\
+            + LEARNING\_RATE\\
+            + DETECTION\_MIN\_CONFIDENCE
+        }{}
+        \umlclass[]{Detectron}{
+            - model\\
+            - classes\\
+            - class\_names
+        }{
+            + recognize(image) : dict
+        }
+    \end{umlpackage}
+\end{tikzpicture}
 
 \end{document}
