@@ -167,12 +167,16 @@ class Detectron:
                             break
                     elif region["type"] == "regex":
                         if rule.search(ocr.text):
+                            found.add(name)
                             break
                 else:
                     continue
 
-                cur_ret["attributes"][name] = ocr.text
-                found.add(name)
+                try:
+                    cur_ret["attributes"][name].append(ocr.text)
+                except KeyError:
+                    cur_ret["attributes"][name] = [ocr.text]
+
                 needed.discard(name)
 
             cur_ret["valid"] = not needed
