@@ -175,8 +175,8 @@ class Detectron:
                 found.add(name)
                 needed.discard(name)
 
-            if not needed:
-                ret.append(cur_ret)
+            cur_ret["valid"] = not needed
+            ret.append(cur_ret)
 
         return ret
 
