@@ -1,3 +1,128 @@
+html {
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-repeat: no-repeat;
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height: 100%;
+    width: 100%;
+    color: white;
+    font-family: 'Saira Condensed', sans-serif;
+    margin: 0em;
+    margin-top: 0em;
+    padding: 0em;
+}
+
 video {
+    margin: 0em;
+    width: 45em;
+    border-radius: 1em;
     transform: scaleX(-1);
+}
+
+#title {
+    margin-bottom: 1em;
+    font-family: "Orbitron", sans-serif;
+    font-size: 2em;
+    text-align: center;
+    color: white;
+    background-color: rgba(162, 0, 255, .65)
+}
+
+#supercontainer {
+    display: block;
+    margin: 0px auto;
+    text-align: left;
+    width: 69em;
+    padding: 0;
+}
+
+#datacontainer {
+    margin: 0em;
+    width: 33%;
+    float: right;
+}
+
+div.datalist {
+    border-radius: 1em;
+    height: 6em;
+    width: 20em;
+}
+
+div.padder {
+    height: auto;
+}
+
+div.textcontainer {
+    padding-top: 0.5em;
+    text-align: center;
+}
+div.textcontainer2 {
+    padding-top: 0.5em;
+    text-align: center;
+    /*border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;*/
+    border-radius: 1em;
+    margin-top: 1em;
+    height: 2em;
+    width: 10.38em;
+    background-color: rgba(200, 200, 220, .70);
+    margin-right: 1em;
+}
+
+/* imgs stack management */
+
+div.singleel {
+    border-radius: 1em;
+    height: 6em;
+    width: 20em;
+    background-color: rgba(200, 200, 220, .70);
+    color: black;
+    margin-bottom: .5em;
+}
+
+div.subcontainer {
+    height:10em;
+    width: 50em;
+    margin-top: 1em;
+}
+
+div.subsubcontainer {
+    height:10em;
+    width: 10.38em;
+    display: inline-block;
+    margin-right: 1em;
+}
+
+img.snapshotsingle {
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+    height: 6em;
+    width: 6em;
+    float: left;
+}
+
+img.roundedimage {
+    /*border-top-left-radius: 1em;
+    border-top-right-radius: 1em;*/
+    border-radius: 1em;
+    /*height: 10.0em;*/
+    width: 10.38em;
 }
