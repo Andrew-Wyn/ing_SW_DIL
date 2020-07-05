@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="it">
     <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron&family=Saira+Condensed:wght@100&display=swap">
+        <link rel="stylesheet" href="/style.css">
+        <link rel="icon" type="image/png" href="/icon.png">
+        <script src="/script.js"></script>
         <title>
-            Document Recognition
-        </title>
-        <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Saira+Condensed:wght@100&display=swap" rel="stylesheet">
-        <link rel="icon" type="image/png" href="{{url_for('static', filename='icon.png')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-        <script src="{{url_for('static', filename='script.js')}}"></script>
-    </head>
-
-    <body>
-        <div id="title">
             Document Recognizer
-        </div>
-        <div id="supercontainer">
-            <video id="videoPreview" autoplay="autoplay" src="{{url_for('static', filename='dummy.mp4')}}">
-                Video playback not supported
-            </video>
-            <div id="datacontainer">
-                <div class="singleel">
-                    <img class="snapshotsingle" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer">
-                        <div>prova</div>
-                        <div>prova</div>
-                    </div>
-                </div>
-                <div class="singleel">
-                    <img class="snapshotsingle" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer">
-                        <div>prova</div>
-                        <div>prova</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subcontainer">
-                <div class="subsubcontainer">
-                    <img class="roundedimage" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer2"></div>
-                </div>
-                <div class="subsubcontainer">
-                    <img class="roundedimage" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer2"></div>
-                </div>
-                <div class="subsubcontainer">
-                    <img class="roundedimage" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer2"></div>
-                </div>
-                <div class="subsubcontainer">
-                    <img class="roundedimage" src="{{url_for('static', filename='dummy.png')}}">
-                    <div class="textcontainer2"></div>
-                </div>
-            </div>
-            <canvas id="canvas" hidden="hidden">
-                Canvases not supported
-            </canvas>
-        </div>
+        </title>
+    </head>
     <body>
+        <div id="pageContainer">
+            <div id="header">
+                Document Recognizer
+            </div>
+            <div id="columnContainer">
+                <div id="mainColumn">
+                    <div id="videoContainer">
+                        <video id="video" poster="black.png">
+                        </video>
+                        <button id="startButton" onclick="start()">
+                            Avvia
+                        </button>
+                    </div>
+                    <div id="previewContainer">
+                        <div class="card">
+                            <img src="dummy.png">
+                            <div class="text">
+                                L'esserino
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="listColumn">
+                    <div class="card">
+                        <img src="dummy.png">
+                        <div class="text">
+                            Matricola: 123456<br>
+                            Nome: Luca Moroni
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <canvas id="canvas" hidden>
+            Your browser doesn't support canvases!
+        </canvas>
+    </body>
 </html>

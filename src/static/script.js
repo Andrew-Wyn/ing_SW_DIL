@@ -1,10 +1,20 @@
+/* Page init */
+
 window.addEventListener("load", initPage);
 
 function initPage(e) {
-    video = document.getElementById("videoPreview");
+    video = document.getElementById("video");
+    button = document.getElementById("startButton");
     canvas = document.getElementById("canvas");
-    imageList = document.getElementById("imageList");
+    listColumn = document.getElementById("listColumn");
+    previewContainer = document.getElementById("previewContainer");
     context = canvas.getContext('2d');
+}
+
+/* Start stream */
+
+function start() {
+    button.setAttribute("disabled", "disabled");
 
     const constraints = {
         audio: false,
@@ -23,23 +33,28 @@ function initPage(e) {
         .catch(getUserMediaError);
 }
 
-function setCameraStream(mediaStream) {
-    video.addEventListener("canplay", videoReady)
-    video.srcObject = mediaStream
+function getUserMediaError(error) {
+    console.error('Error:', error);
 }
 
-function videoReady(e) {
-    button.removeAttribute("disabled");
+function setCameraStream(mediaStream) {
+    video.addEventListener("canplay", hideStartButton);
+    video.srcObject = mediaStream;
+    video.play();
 }
+
+function hideStartButton(e) {
+    button.setAttribute("hidden", "hidden");
+}
+
+/* Main logic */
 
 function takePicture() {
-    button.setAttribute("disabled", "disabled");
-
     w = video.videoWidth;
     h = video.videoHeight;
 
-    canvas.width = w
-    canvas.height = h
+    canvas.width = w;
+    canvas.height = h;
 
     context.drawImage(video, 0, 0, w, h);
     var data = canvas.toDataURL('image/jpg', .8);
@@ -62,6 +77,10 @@ function makeRequest(imgData) {
     .catch(fetchError);
 }
 
+function fetchError(error) {
+    console.error('Error:', error);
+}
+
 function responseReceived(response) {
     if (response.status != 200) {
         console.log("Errore " + response.status);
@@ -74,8 +93,11 @@ function responseReceived(response) {
         .catch(responseJsonError);
 }
 
+function responseJsonError(error) {
+    console.error('Error:', error);
+}
+
 function dataReady(data) {
-    console.log(data)
     if (data.length != 0) {
         while (imageList.firstChild) {
             imageList.removeChild(imageList.lastChild);
@@ -92,17 +114,28 @@ function dataReady(data) {
         }
     }
 
-    window.setTimeout(takePicture, 5);
+    window.setTimeout(takePicture, 0);
 }
 
-function fetchError(error) {
-    console.error('Error:', error);
+/* Cards creation */
+
+function test() {
+    listColumn.appendChild(makeCard("dummy.png", "Test"));
 }
 
-function responseJsonError(error) {
-    console.error('Error:', error);
-}
+function makeCard(image, text) {
+    var card = document.createElement("div");
+    card.setAttribute("class", "card");
 
-function getUserMediaError(error) {
-    console.error('Error:', error);
+    var img = document.createElement("img");
+    img.setAttribute("src", image);
+    card.appendChild(img);
+
+    var textDiv = document.createElement("div");
+    textDiv.setAttribute("class", "text");
+    var textNode = document.createTextNode(text);
+    textDiv.appendChild(textNode);
+    card.appendChild(textDiv);
+
+    return card;
 }
