@@ -19,7 +19,7 @@ OcrRecord = namedtuple("OcrRecord", "conf,text,x,y,w,h")
 
 class InferenceConfig(Config):
     """
-    Configuration for training on the toy dataset.
+    Configuration for training on the dataset.
     Derives from the base Config class and overrides some values.
     """
     # Give the configuration a recognizable name
