@@ -38,13 +38,14 @@ function getUserMediaError(error) {
 }
 
 function setCameraStream(mediaStream) {
-    video.addEventListener("canplay", hideStartButton);
+    video.addEventListener("canplay", startMain);
     video.srcObject = mediaStream;
     video.play();
 }
 
-function hideStartButton(e) {
+function startMain(e) {
     button.setAttribute("hidden", "hidden");
+    window.setTimeout(takePicture, 0);
 }
 
 /* Main logic */
@@ -97,33 +98,77 @@ function responseJsonError(error) {
     console.error('Error:', error);
 }
 
-function dataReady(data) {
-    if (data.length != 0) {
-        while (imageList.firstChild) {
-            imageList.removeChild(imageList.lastChild);
-        }
-        var i;
-        for (i = 0; i < data.length; i++) {
-            var elem = document.createElement("img");
-            elem.setAttribute('src', "data:image/png;base64," + data[i].snapshot);
-            imageList.appendChild(elem);
+function dataReady(dataArray) {
+    window.setTimeout(takePicture, 0);
 
-            elem = document.createTextNode(
-                JSON.stringify(data[i].attributes, null, 4));
-            imageList.appendChild(elem);
-        }
+    if (data.length == 0) {
+        return;
     }
 
-    window.setTimeout(takePicture, 0);
+    emptyContainer(previewContainer);
+
+    dataArray.forEach(function (data, i, arr) {
+        card = makeCard(PNGb64toURL(data.snapshot), [bold(data.type)]);
+        previewContainer.appendChild(card);
+
+        if (data.valid) {
+            var id = data["type"] + data["primaryKey"];
+            card = makeCard(PNGb64toURL(data.snapshot), attrToDOM(data.attributes));
+            card.setAttribute("id", id);
+            dropFromList(id);
+            listColumn.appendChild(card);
+        }
+    });
 }
 
 /* Cards creation */
 
-function test() {
-    listColumn.appendChild(makeCard("dummy.png", "Test"));
+function emptyContainer(container) {
+    while (container.firstChild) {
+        container.removeChild(container.lastChild);
+    }
 }
 
-function makeCard(image, text) {
+function PNGb64toURL(s) {
+    return "data:image/png;base64," + s;
+}
+
+function bold(text) {
+    var b = document.createElement("b");
+    var textNode = document.createTextNode(text);
+    b.appendChild(textNode);
+    return b;
+}
+
+function attrToDOM(attr) {
+    var ret = [];
+
+    var keys = [];
+    for (var key in attr) {
+        if (attr.hasOwnProperty(key)) {
+            keys.push(key);
+        }
+    }
+
+    keys.sort();
+
+    keys.forEach(function(key, i, keys) {
+        ret.push(bold(key + ": "));
+        ret.push(document.createTextNode(attr[key].join(" ")));
+        ret.push(document.createElement("br"));
+    });
+
+    return ret;
+}
+
+function dropFromList(key) {
+    el = document.getElementById(key);
+    if (el) {
+        listColumn.removeChild(el);
+    }
+}
+
+function makeCard(image, textElements, key) {
     var card = document.createElement("div");
     card.setAttribute("class", "card");
 
@@ -133,8 +178,11 @@ function makeCard(image, text) {
 
     var textDiv = document.createElement("div");
     textDiv.setAttribute("class", "text");
-    var textNode = document.createTextNode(text);
-    textDiv.appendChild(textNode);
+
+    textElements.forEach(function (textElement, i, arr) {
+        textDiv.appendChild(textElement);
+    });
+
     card.appendChild(textDiv);
 
     return card;
