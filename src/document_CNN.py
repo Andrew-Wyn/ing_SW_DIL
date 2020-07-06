@@ -17,28 +17,27 @@ from collections import namedtuple
 OcrRecord = namedtuple("OcrRecord", "conf,text,x,y,w,h")
 
 
-class InferenceConfig(Config):
-    """
-    Configuration for training on the dataset.
-    Derives from the base Config class and overrides some values.
-    """
-    # Give the configuration a recognizable name
-    NAME = "document"
+def makeConfigClass(nclasses):
+    class InferenceConfig(Config):
+        """
+        Configuration for training on the dataset.
+        Derives from the base Config class and overrides some values.
+        """
 
-    # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + tesserino // scalare
+        # Give the configuration a recognizable name
+        NAME = "document"
 
-    # Number of training steps per epoch
-    STEPS_PER_EPOCH = 41
+        # Number of classes (including background)
+        NUM_CLASSES = 1 + nclasses  # Background + actual classes
 
-    LEARNING_RATE=0.006
+        # Skip detections with < 90% confidence
+        DETECTION_MIN_CONFIDENCE = 0.9
+        # Set batch size to 1 since we'll be running inference on
+        # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
+        GPU_COUNT = 1
+        IMAGES_PER_GPU = 1
 
-    # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
-    # Set batch size to 1 since we'll be running inference on
-    # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    return InferenceConfig
 
 
 # classes = {
@@ -73,6 +72,7 @@ def check_box(snap_w, snap_h, ocr_x1, ocr_y1, ocr_w, ocr_h, x1, y1, x2, y2):
 
 class Detectron:
     def __init__(self, weights_path, classes):
+        InferenceConfig = makeConfigClass(len(classes))
         config = InferenceConfig()
         config.display()
 
