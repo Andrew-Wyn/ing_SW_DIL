@@ -113,7 +113,7 @@ function dataReady(dataArray) {
 
         if (data.valid) {
             var id = data["type"] + data["primaryKey"];
-            card = makeCard(PNGb64toURL(data.snapshot), attrToDOM(data.attributes));
+            card = makeCard(PNGb64toURL(data.snapshot), attrToDOM(data.attributes), true);
             card.setAttribute("id", id);
             dropFromList(id);
             listColumn.appendChild(card);
@@ -168,7 +168,7 @@ function dropFromList(key) {
     }
 }
 
-function makeCard(image, textElements, key) {
+function makeCard(image, textElements, removable) {
     var card = document.createElement("div");
     card.setAttribute("class", "card");
 
@@ -179,6 +179,16 @@ function makeCard(image, textElements, key) {
     var textDiv = document.createElement("div");
     textDiv.setAttribute("class", "text");
 
+    if (removable) {
+        var redx = document.createElement("img");
+        redx.setAttribute("class", "redx");
+        redx.setAttribute("src", "/red-x.svg");
+        redx.onclick = function() {
+            listColumn.removeChild(card);
+        };
+        textDiv.appendChild(redx);
+    }
+
     textElements.forEach(function (textElement, i, arr) {
         textDiv.appendChild(textElement);
     });
@@ -187,3 +197,15 @@ function makeCard(image, textElements, key) {
 
     return card;
 }
+
+/*
+function makeRedx(cardElement) {
+    var id = cardElement.getAttribute("id");
+    var textDiv = cardElement.lastChild;
+    var redx = document.createElement("img");
+    redx.setAttribute("class", "redx");
+    redx.setAttribute("src", "/red-x.svg");
+    redx.onclick = function() {removeFromList(id);};
+    textDiv
+}
+*/

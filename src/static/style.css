@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
 
 :root {
+    --main-column-width: 66%;
     --main-padding: 1rem;
     --list-card-height: 7rem;
     --list-internal-margin: .5rem;
@@ -66,7 +67,7 @@ html, body, #pageContainer {
 }
 
 #mainColumn {
-    width: 66%;
+    width: var(--main-column-width);
     min-height: 0;
     padding: var(--main-padding);
     padding-bottom: 0;
@@ -75,7 +76,7 @@ html, body, #pageContainer {
 }
 
 #listColumn {
-    flex-grow: 1;
+    width: calc(100% - var(--main-column-width));
     height: 100%;
     min-height: 0;
     padding: var(--main-padding);
@@ -129,15 +130,13 @@ html, body, #pageContainer {
     display: none;
 }
 
-div.card {
-}
-
 div.text {
     padding-left: 1em;
     padding-right: 1em;
     padding-top: 1ex;
     padding-bottom: 1ex;
     box-sizing: border-box;
+    position: relative;
 }
 
 #previewContainer > div.card {
@@ -188,4 +187,21 @@ div.text {
 
 #listColumn > div.card > div.text {
     flex-grow: 1;
+}
+
+img.redx {
+    position: absolute;
+    top: .8em;
+    right: .8em;
+    width: 1em;
+    height: 1em;
+    display: none;
+}
+
+img.redx:hover {
+    cursor: pointer;
+}
+
+#listColumn > div.card:hover img.redx {
+    display: block;
 }
