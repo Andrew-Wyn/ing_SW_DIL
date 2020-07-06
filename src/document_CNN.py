@@ -148,7 +148,9 @@ class Detectron:
             cur_ret = {
                 "type": class_name,
                 "snapshot": snapshot.tobytes(),
-                "attributes": {}
+                "attributes": {},
+                "valid": False,
+                "primaryKey": None
             }
 
             found = set()
@@ -179,7 +181,12 @@ class Detectron:
 
                 needed.discard(name)
 
-            cur_ret["valid"] = not needed
+            if needed:
+                cur_ret["valid"] = False
+            else:
+                cur_ret["valid"] = True
+                cur_ret["primaryKey"] = cur_ret["attributes"][class_["primaryKey"]]
+
             ret.append(cur_ret)
 
         return ret
