@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="it">
     <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/style.css">
+        <link rel="icon" type="image/png" href="/icon.png">
+        <script src="/script.js"></script>
         <title>
-            Document Recognition
+            Document Recognizer
         </title>
-        <link rel="icon" type="image/png" href="{{url_for('static', filename='icon.png')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-        <script src="{{url_for('static', filename='script.js')}}"></script>
     </head>
-
     <body>
-        <!--
-        <form>
-            <input type="file" id="fileInput">
-            <input type="button"  value="">
-        </form>
-        <button onClick="submit()">Submit!</button><br>
-        <img src="" id="canvas">
-        -->
-
-        <video id="videoPreview" autoplay="autoplay" height="480" width="640">
-            Video playback not supported
-        </video>
-        <button id="button" disabled="disabled" onClick="takePicture()">Cattura!</button>
-        <canvas id="canvas" hidden="hidden">
-            Canvases not supported
-        </canvas>
-
-        <div id="imageList">
+        <div id="pageContainer">
+            <div id="header">
+                Document Recognizer
+            </div>
+            <div id="columnContainer">
+                <div id="mainColumn">
+                    <div id="videoContainer">
+                        <video id="video" poster="black.png">
+                        </video>
+                        <button id="startButton" onclick="start()">
+                            Avvia
+                        </button>
+                    </div>
+                    <div id="previewContainer">
+                    </div>
+                </div>
+                <div id="listColumn">
+                </div>
+            </div>
         </div>
-    <body>
+        <canvas id="canvas" hidden>
+            Your browser doesn't support canvases!
+        </canvas>
+    </body>
 </html>
