@@ -32,6 +32,19 @@ class TestSet(unittest.TestCase):
         expected = json.loads('{"Matricola": ["311279"], "Nome": ["Luca", "Moroni"]}')
         self.assertEqual(attributes, expected)
 
+    def test_patente(self):
+        """
+        test patente recognition
+        """
+
+        with open("test_patente.jpg", "rb") as f:
+            image = f.read()
+        
+        result = self._model.recognize(image)
+        attributes = result[0]["attributes"]
+        expected = json.loads('{"Numero": ["TR5160189G"]}')
+        self.assertEqual(attributes, expected)
+
     def test_bg(self):
         """
         test bg recognition
