@@ -81,13 +81,46 @@ su tecnologie browser
 
 \section{Architettura del Sistema}
 
-Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod
-tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam, quis nostrum exercitationem ullamco laboriosam, nisi ut aliquid
-ex ea commodi consequatur. Duis aute irure reprehenderit in voluptate
-velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-obcaecat cupiditat non proident, sunt in culpa qui officia deserunt
-mollit anim id est laborum.
+Il sistema è implementato in un modulo Python. Le funzionalità di
+riconoscimento sono rese disponibili tramite istanza di una classe
+\texttt{Detectron}, inizializzata tramite una struttura di
+configurazione definibile dall'utente in congiunzione con i pesi della
+rete neurale, per la massima estensibilità.
+
+Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
+\texttt{recognize} che implementa la funzione di riconoscimento.\\
+\texttt{recognize} accetta un oggetto \texttt{bytes}-like che
+rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
+OpenCV2. Dopo aver decodificato l'immagine questa viene passata
+attraverso la rete neurale Mask R-CNN precedentemente inizializzata, che
+individua delle ROI associate ai tipi di documento configurati, a ognuna
+delle quali sarà associato un dizionario. L'area di ogni ROI viene
+estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
+codificata in PNG in un oggetto \texttt{bytes}.
+
+Su questi snapshot viene poi applicato l'algoritmo di OCR della libreria
+tesseract. Quest'ultimo a sua volta restituirà una serie di record che
+rappresentano il testo trovato, il grado confidenza e la relativa
+posizione all'interno della ROI. Questi record sono identificati in base
+alla posizione o al formato, specificato tramite regex. Il testo dei
+record così individuati è aggiunto a un dizionario sotto il nome di
+``\texttt{attributes}''. L'oggetto di configurazione definisce quali di
+questi ``\texttt{attributes}'' sono necessari al riconoscimento del
+documento e solo quando tutti questi sono effettivamente stati
+individuati il documento viene marcato come valido. Uno degli attributi
+necessari può essere designato come chiave primaria, quando un documento
+è valido il valore della chiave primaria viene restituito nel dizionario
+sotto il nome di ``\texttt{primaryKey}'' e può essere utilizzato per
+l'identificazione univoca del documento appena scansionato. Si consiglia
+di indicare come chiave primaria il codice o numero identificativo
+univoco del documento, quando presente.\\
+La funzione \texttt{recognize} ritorna in output una lista di questi
+dizionari.
+
+A titolo esemplificativo, si è progettato e realizzato un servizio web
+che mette a disposizione una API REST, e una web app implementata in
+HTML5, CSS3 e JavaScript, i quali espongono le funzionalità messe a
+disposizione dalla suddetta libreria.
 
 \begin{figure}[p]
   \caption{Diagramma delle Classi}
