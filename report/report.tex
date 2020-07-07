@@ -28,7 +28,7 @@ di immagini di una serie di tipologie di documenti estensibili dal
 client, e il riconoscimento dei caratteri per classi di dati specifiche
 per gli stessi.\\
 Sarà fornito anche una possibile implementazione di un frontend basato
-su tecnologie browser
+su tecnologie browser.
 
 \section{Analisi dei Requisiti}
 \subsection{Glossario}
@@ -37,7 +37,7 @@ su tecnologie browser
     \item[CNN] Convolutional Neural Network, rete neurale
         convoluzionale, adatta alla classificazione di intere immagini.
 
-    \item[Mask R-CNN] egion-based Convolutional Neural Network, libreria
+    \item[Mask-R\_CNN] egion-based Convolutional Neural Network, libreria
         basata su Resnet 101 e tecnologia CNN in grado di effettuare
         segmentazione di immagini.
 
@@ -45,7 +45,7 @@ su tecnologie browser
         contenenti determinati oggetti.
 
     \item[Training] ``Allenamento'' della rete neurale al riconoscimento
-        di uno o più tipi di documento
+        di uno o più tipi di documento.
 
     \item[Pesi] Valori calcolati nel processo di training che
         influenzano il comportamento della rete neurale, portandola a
@@ -56,7 +56,7 @@ su tecnologie browser
 
     \item[ROI] Region Of Interest, regione di un immagine inferita dalla
         rete Mask-R\_CNN che con un alta probabilita contiene un oggetto
-        identificato
+        identificato.
 
 \end{description}
 
@@ -68,19 +68,19 @@ su tecnologie browser
         riconoscibili.
     \item Avere la possibilità di definire la natura dei documenti
         oggetto del riconoscimento e delle informazioni testuali
-        rilevanti in essi contenute
+        rilevanti in essi contenute.
     \item Fornire strumenti per il retraining della rete neurale per
-        nuovi tipi di documento
+        nuovi tipi di documento.
 \end{itemize}
 
 \subsection{Analisi Requisiti Sistema}
 
 \begin{itemize}
     \item Target: Python 3.7, Tensorflow 1.13.1, Keras 2.0.8, ultime
-        versioni certamente compatibili con la libreria Mask R-CNN
-        utilizzata in questo progetto
+        versioni certamente compatibili con la libreria Mask-R\_CNN
+        utilizzata in questo progetto.
     \item Mettere a disposizione un'implementazione di riferimento di
-        frontend compatibile con la libreria
+        frontend compatibile con la libreria.
 \end{itemize}
 
 \section{Architettura del Sistema}
@@ -96,7 +96,7 @@ Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
 \texttt{recognize} accetta un oggetto \texttt{bytes}-like che
 rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
 OpenCV2. Dopo aver decodificato l'immagine questa viene passata
-attraverso la rete neurale Mask R-CNN precedentemente inizializzata, che
+attraverso la rete neurale Mask-R\_CNN precedentemente inizializzata, che
 individua delle ROI associate ai tipi di documento configurati, a ognuna
 delle quali sarà associato un dizionario. L'area di ogni ROI viene
 estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
