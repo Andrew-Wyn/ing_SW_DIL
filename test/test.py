@@ -11,8 +11,8 @@ import cv2
 
 class TestSet(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super(TestSet, self).__init__(*args, **kwargs)
-        
+        super().__init__(*args, **kwargs)
+
         with open("config.json") as f:
             config = json.load(f)
 
@@ -27,7 +27,7 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = self._model.recognize(image)
-        attributes = result[0]["attributes"]         
+        attributes = result[0]["attributes"]
 
         expected = json.loads('{"Matricola": ["311279"], "Nome": ["Luca", "Moroni"]}')
         self.assertEqual(attributes, expected)
@@ -39,7 +39,7 @@ class TestSet(unittest.TestCase):
 
         with open("test_patente.jpg", "rb") as f:
             image = f.read()
-        
+
         result = self._model.recognize(image)
         attributes = result[0]["attributes"]
         expected = json.loads('{"Numero": ["TR5160189G"]}')
@@ -58,7 +58,7 @@ class TestSet(unittest.TestCase):
         expected = []
 
         self.assertEqual(result, expected)
-    
+
     def test_bytestream(self):
         """
         test bytestream that don't represent a png image
