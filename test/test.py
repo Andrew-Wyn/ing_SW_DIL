@@ -1,6 +1,10 @@
+#!/usr/bin/env python3
 import unittest
+import sys
 
-from src.document_CNN import Detectron
+sys.path.insert(0, "../src/")
+
+from document_CNN import Detectron
 
 import json
 import cv2
@@ -9,7 +13,7 @@ class TestSet(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestSet, self).__init__(*args, **kwargs)
         
-        with open("test/config.json") as f:
+        with open("config.json") as f:
             config = json.load(f)
 
         self._model = Detectron(config["weights"], config["classes"])
@@ -18,24 +22,22 @@ class TestSet(unittest.TestCase):
         """
         test tesserino recognition
         """
-        # data = {}
 
-        with open("test/test_tesserino.jpg", "rb") as f:
+        with open("test_tesserino.jpg", "rb") as f:
             image = f.read()
 
-
         result = self._model.recognize(image)
-        attributes = result[0]["attributes"]
+        attributes = result[0]["attributes"]         
+
         expected = json.loads('{"Matricola": ["311279"], "Nome": ["Luca", "Moroni"]}')
         self.assertEqual(attributes, expected)
 
-    def test_patente(self):
+    def test_bg(self):
         """
-        test patente recognition
+        test bg recognition
         """
-        # data = {}
 
-        with open("test/test_backgroud.jpg", "rb") as f:
+        with open("test_backgroud.jpg", "rb") as f:
             image = f.read()
 
         result = self._model.recognize(image)
@@ -43,15 +45,6 @@ class TestSet(unittest.TestCase):
         expected = []
 
         self.assertEqual(result, expected)
-    
-    def test_bg(self):
-        """
-        test bg recognition
-        """
-        # data = {}
-
-        result = None
-        self.assertIsNone(result)
     
     def test_bytestream(self):
         """
