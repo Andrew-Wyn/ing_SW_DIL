@@ -5,8 +5,8 @@ DIAGRAMS=uml_class.pdf uml_comm.pdf uml_seq.pdf uml_use_case.pdf uml_state.pdf u
 all: report.pdf
 
 report.pdf: report.tex $(DIAGRAMS)
-	pdflatex $<
-	pdflatex $<
+	pdflatex -shell-escape $<
+	pdflatex -shell-escape $<
 
 %.pdf: %.drawio
 	rm -f $@

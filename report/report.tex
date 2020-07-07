@@ -4,6 +4,7 @@
 \usepackage[italian]{babel}
 \usepackage{lmodern}
 \usepackage{graphicx}
+\usepackage{minted}
 
 \begin{document}
 
@@ -121,6 +122,36 @@ A titolo esemplificativo, si è progettato e realizzato un servizio web
 che mette a disposizione una API REST, e una web app implementata in
 HTML5, CSS3 e JavaScript, i quali espongono le funzionalità messe a
 disposizione dalla suddetta libreria.
+
+\pagebreak
+
+\subsection{Esempio di configurazione}
+\begin{minted}{python}
+{
+    "weights": "percorso/ai/pesi.h5",
+    "classes": {
+        "Tesserino": {
+            "lang": "ita",
+            "min_conf": 50,
+            "primaryKey": "Matricola",
+            "regions": [
+                {
+                    "name": "Matricola",
+                    "type": "regex",
+                    "rule": "^\\d{6}$",
+                    "needed": True
+                },
+                {
+                    "name": "Nome",
+                    "type": "box",
+                    "rule": [0, 0.6, 0.2, 1],
+                    "needed": False
+                }
+            ]
+        }
+    }
+}
+\end{minted}
 
 \begin{figure}[p]
   \caption{Diagramma delle Classi}
