@@ -26,7 +26,7 @@ class TestSet(unittest.TestCase):
         test tesserino recognition
         """
 
-        with open("test_tesserino.jpg", "rb") as f:
+        with open(f"{scriptdir}/../test/test_tesserino.jpg", "rb") as f:
             image = f.read()
 
         result = self._model.recognize(image)
@@ -40,7 +40,7 @@ class TestSet(unittest.TestCase):
         test patente recognition
         """
 
-        with open("test_patente.jpg", "rb") as f:
+        with open(f"{scriptdir}/../test/test_patente.jpg", "rb") as f:
             image = f.read()
 
         result = self._model.recognize(image)
@@ -53,7 +53,7 @@ class TestSet(unittest.TestCase):
         test bg recognition
         """
 
-        with open("test_backgroud.jpg", "rb") as f:
+        with open(f"{scriptdir}/../test/test_backgroud.jpg", "rb") as f:
             image = f.read()
 
         result = self._model.recognize(image)
