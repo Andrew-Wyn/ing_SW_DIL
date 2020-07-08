@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 import unittest
 import sys
-
-sys.path.insert(0, "../src/")
-
-from document_CNN import Detectron
-
 import json
 import cv2
+
+from os import path
+
+scriptdir = path.dirname(path.realpath(__file__))
+sys.path.insert(0, f"{scriptdir}/../src/")
+
+from document_CNN import Detectron
 
 class TestSet(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        with open("config.json") as f:
+        with open(f"{scriptdir}/../src/model/config.json") as f:
             config = json.load(f)
 
+        config["weights"] = f"{scriptdir}/../src/{config['weights']}"
         self._model = Detectron(config["weights"], config["classes"])
 
     def test_tesserino(self):

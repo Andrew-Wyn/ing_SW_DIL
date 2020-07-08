@@ -4,14 +4,21 @@ from flask import Flask, request, render_template
 from base64 import b64decode, b64encode
 import json
 import time
+import sys
+
+from os import path
+
+scriptdir = path.dirname(path.realpath(__file__))
+sys.path.insert(0, f"{scriptdir}/../src/")
 
 from document_CNN import Detectron
 
-
 app = Flask(__name__, static_url_path="/")
 
-with open("model/config.json") as f:
+with open(f"{scriptdir}/model/config.json") as f:
     config = json.load(f)
+
+config["weights"] = f"{scriptdir}/../src/{config['weights']}"
 
 detectron = Detectron(config["weights"], config["classes"])
 
