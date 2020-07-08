@@ -2,7 +2,7 @@
 Document recognition
 
 ## Preparations
-Install on yout system
+Install on your system
 * `tesseract` OCR library
 * `pipenv`
 * `pyenv`
