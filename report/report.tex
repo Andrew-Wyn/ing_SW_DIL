@@ -18,7 +18,9 @@
 \maketitle
 
 \begin{abstract}
-    %TODO
+    Si descrive l'implementazione di una libreria basata su Mask-RCNN e
+    tesseract per il riconoscimento interattivo di documenti
+    identificativi e tessere
 \end{abstract}
 
 \section{Obbiettivi}
@@ -191,5 +193,21 @@ disposizione dalla suddetta libreria.
   \centering
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
 \end{figure}
+
+\section{Design Pattern}
+
+Un design pattern che in potenza poterebbe essere applicato è
+decorator.\\
+Inizialmente non eravamo convinti della thread safness
+della funzione \texttt{recognize} nella classe \texttt{Detectron}. Una
+possibile soluzione consisterebbe nel creare una classe
+\texttt{DetectronPool}, la quale nell'inizializzazione carica una pool
+di oggetti \texttt{Detectron}. Tale classe avrà un metodo
+\texttt{recognize} che andrà a decorare l'omonimo metodo di
+\texttt{Detectron}, il quale gestirebbe l'allocazione della risorsa al
+thread chiamante in modo trasparente tramite un semaforo contatore
+inizializzato al numero di \texttt{Detectron} nella pool, garantendo la
+mutua esclusione nell'esecuzione del metodo \texttt{recognize} in
+maniera totalmente trasparente per l'utilizzatore.
 
 \end{document}
