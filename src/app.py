@@ -10,7 +10,7 @@ from document_CNN import Detectron
 
 app = Flask(__name__, static_url_path="/")
 
-with open("config.json") as f:
+with open("model/config.json") as f:
     config = json.load(f)
 
 detectron = Detectron(config["weights"], config["classes"])
