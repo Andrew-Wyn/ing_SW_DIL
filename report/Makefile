@@ -1,4 +1,4 @@
-DIAGRAMS=uml_class.pdf uml_comm.pdf uml_seq.pdf uml_use_case.pdf uml_state.pdf uml_activity.pdf uml_decorator.pdf
+DIAGRAMS=uml_class.pdf uml_comm.pdf uml_seq.pdf uml_use_case.pdf uml_state.pdf uml_activity.pdf uml_proxy.pdf
 
 .PHONY: all clean
 

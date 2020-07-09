@@ -198,24 +198,24 @@ disposizione dalla suddetta libreria.
 
 \section{Design Pattern}
 
-Un design pattern che in potenza poterebbe essere applicato è
-decorator.\\
-Inizialmente non eravamo convinti della thread safness
-della funzione \texttt{recognize} nella classe \texttt{Detectron}. Una
-possibile soluzione consisterebbe nel creare una classe
-\texttt{DetectronPool}, la quale nell'inizializzazione carica una pool
-di oggetti \texttt{Detectron}. Tale classe avrà un metodo
-\texttt{recognize} che andrà a decorare l'omonimo metodo di
-\texttt{Detectron}, il quale gestirebbe l'allocazione della risorsa al
-thread chiamante in modo trasparente tramite un semaforo contatore
-inizializzato al numero di \texttt{Detectron} nella pool, garantendo la
-mutua esclusione nell'esecuzione del metodo \texttt{recognize} in
-maniera totalmente trasparente per l'utilizzatore.
+Un design pattern che in potenza poterebbe essere applicato è il
+Protection Proxy.\\
+Inizialmente non eravamo convinti della thread safness della funzione
+\texttt{recognize} nella classe \texttt{Detectron}. Una possibile
+soluzione consisterebbe nel creare una classe \texttt{DetectronPool}, la
+quale nell'inizializzazione carica una pool di oggetti
+\texttt{Detectron}. Tale classe avrà un metodo \texttt{recognize} che
+rimanderà all'omonimo metodo di \texttt{Detectron}, il quale gestirebbe
+l'allocazione della risorsa al thread chiamante in modo trasparente
+tramite un semaforo contatore inizializzato al numero di
+\texttt{Detectron} nella pool, garantendo la mutua esclusione
+nell'esecuzione del metodo \texttt{recognize} in maniera totalmente
+trasparente per l'utilizzatore.
 
 \begin{figure}[h]
-  \caption{Diagramma di Classe di un Decoratore}
+  \caption{Diagramma di Classe Proxy}
   \centering
-  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_decorator.pdf}
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_proxy.pdf}
 \end{figure}
 
 \end{document}
