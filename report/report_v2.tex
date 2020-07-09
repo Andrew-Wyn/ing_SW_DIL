@@ -30,6 +30,29 @@ grado di riconoscere e di identificare un insieme di documenti a priori definiti
 e di trascrivere in caratteri macchina delle porzioni di testo presenti nel documento precedentemente identificato
 
 \section{Analisi dei Requisiti}
+\subsection{Analisi Requisiti Utente}
+
+\begin{itemize}
+    \item Ottenere un elenco dei documenti visibili all'interno di
+        un'immagine e le componenti testuali specifiche in esso
+        riconoscibili.
+    \item Avere la possibilità di definire la natura dei documenti
+        oggetto del riconoscimento e delle informazioni testuali
+        rilevanti in essi contenute.
+    \item Mettere a disposizione un interfaccia grafica semplice e minimale per l'acquisizione di video e immagini
+
+\end{itemize}
+
+\subsection{Analisi Requisiti Sistema}
+
+\begin{itemize}
+    \item Implementare delle tecnologie per l'object detection e ocr allo stato dell'arte per
+    erogare in modo efficiente il servizio richiesto dal committente.
+    \item Fornire strumenti che mettono a disposizione la possibilita di rendere scalabile il numero
+    e la tipologia di documenti riconoscibili dall'applicativo
+    \item l'applicativo finale -dovrebbe- essere portatile e non strettamente dipendente da una particolare architettura
+\end{itemize}
+
 \subsection{Glossario e Dominio applicativo}
 
 Il dominio applicativo di tale sistema è l'ambito della computer vision e del ocr.
@@ -50,25 +73,6 @@ in modo intuitivo ed efficiente potra avere accesso al servizio erogato
 
 \end{description}
 
-\subsection{Analisi Requisiti Utente}
-
-\begin{itemize}
-    \item Ottenere un elenco dei documenti visibili all'interno di
-        un'immagine e le componenti testuali specifiche in esso
-        riconoscibili.
-    \item Avere la possibilità di definire la natura dei documenti
-        oggetto del riconoscimento e delle informazioni testuali
-        rilevanti in essi contenute.
-\end{itemize}
-
-\subsection{Analisi Requisiti Sistema}
-
-\begin{itemize}
-    \item Implementare delle tecnologie per l'object detection e ocr allo stato dell'arte per
-    erogare in modo efficiente il servizio richiesto dal committente.
-    \item Fornire strumenti che mettono a disposizione la possibilita di rendere scalabile il numero
-    e la tipologia di documenti riconoscibili dall'applicativo
-\end{itemize}
 
 \section{Architettura del Sistema}
 
@@ -81,7 +85,7 @@ Abbiamo optato per lo sviluppo di una soluzione web, Il nostro applicativo si su
 
 Nella progettazione architetturale di tale applicativo, si è optato per
 l'utilizzo di librerie testate e rappresentanti lo stato dell'arte, inerentemente all'ambito applicativo sopracitato.\\
-Per quanto riguarda l'object detection, abbiamo selezionato la libreria Mask-R_CNN
+Per quanto riguarda l'object detection, abbiamo selezionato la libreria -Mask-R_CNN-
 una libreria che oltre a object detection mette a disposizione anche segmentazione di immagini,
 una feature aggiuntiva che oltre a ritornare un rettangolo contenente un oggetto di una determinata classe nell'immagine ne
 ritorna anche la regione di pixel che lo rappresenta, tale feature comunque non è utilizzata nel nostro sistema,
@@ -89,10 +93,33 @@ ma è tornata utile in fase di training in quanto possiamo allenare la nostra re
 la presenza dei polpastrelli che in alcuni casi possono portare la nostra rete fuori rotta.\\
 Invece per effettuare l'ocr abbiamo optato per la libreria tesseract, implementata in python tramite una libreria wrapper chiamata pytesseract\\
 
-le librerie sopracitate hanno portato alla necessita di importarne altre tra cui, tensorflow == 1.x,
+le librerie appena citate hanno portato alla necessita di importarne altre tra cui, tensorflow == 1.x,
 flask==2.0.8 sulle quali si basa mask-r_cnn, opencv per la gestione e la codifica di immagini.
 
---> aggiungere descrizione piu dettagliata di mask-r_cnn
+per la gestione delle dipendenze in fase di sviluppo abbiamo utilizzato due strumenti propri dell'ambiente 
+python, pipenv che mette a disposizione un ambiente virtuale contenente determinate librerie in modo asettico rispetto a quelle di sistema
+e che rende ripetibile su altre macchine la configurazione da noi utilizzata con semplici passaggi.
+pyenv che invece mette a disposizione delle versioni di python proprie in modo da non andare a modificare quello di sistema nel caso
+sia necessaria un versione non corrispondente con quella di sistema, ad esempio tensorflow1.x è utilizzabile
+solamente con versioni di python <= 3.7.x con pyenv tale requisito puo essere soddisfatto su qualsiasi macchina.
+
+
+\subsection{Mask}
+
+There are two stages of Mask RCNN. First, 
+it generates proposals about the regions where there 
+might be an object based on the input image. Second, it predicts 
+the class of the object, refines the bounding box and generates a mask in 
+pixel level of the object based on the first stage proposal. 
+Both stages are connected to the backbone structure.
+
+A light weight neural network called RPN scans all FPN top-bottom pathway( hereinafter referred to feature map) and proposes regions which may contain objects
+
+At the second stage, another neural network takes proposed regions by the first stage and assign them to several specific areas of a feature map level, scans these areas, and generates objects classes(multi-categorical classified), bounding boxes and masks.
+
+
+
+--> aggiungere descrizione piu dettagliata di mask-r_cnn e foto descrittiva
 
 \subsection{Training}
 
