@@ -1,0 +1,261 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{minted}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{1em}
+
+\begin{document}
+
+\title{Riconoscimento Documenti}
+\author{Simone Cimarelli \and Vittorio Mignini \and Luca Moroni}
+\date{9 luglio 2020}
+
+\maketitle
+
+\begin{abstract}
+    Si descrive l'implementazione di una libreria basata su Mask-RCNN e
+    tesseract per il riconoscimento interattivo di documenti
+    identificativi e tessere.
+\end{abstract}
+
+\section{Obbiettivi}
+
+Implementare un applicativo che tramite l'utilizzo di un dispositivo di input video sia in
+grado di riconoscere e di identificare un insieme di documenti a priori definiti
+e di trascrivere in caratteri macchina delle porzioni di testo presenti nel documento precedentemente identificato
+
+\section{Analisi dei Requisiti}
+\subsection{Glossario e Dominio applicativo}
+
+Il dominio applicativo di tale sistema è l'ambito della computer vision e del ocr.
+In ultimo stadio l'utente finale avra a disposizione un interfaccia grafica attraverso la quale
+in modo intuitivo ed efficiente potra avere accesso al servizio erogato 
+
+\begin{description}
+
+    \item[Computer Vision] Insieme di metodologie algoritmiche e matematiche che hanno come obiettivo
+    quello di acquisire delle conoscenze ad alto livello partendo da immagini o video. Nel nostro caso 
+    capire se e dove nelle immagini passate all'applicativo è presente un documento del tipo prestabilio
+
+    \item[Object Detection] tecnologia relativa all'ambito della compute vision, che propone una soluzione
+    algoritmica per il riconoscimento di istanze riguardanti oggetti di classi predefinite in immagini digitali e video
+
+    \item[OCR] Optical Character Recognition, metodologie software per il riconoscimento di caratteri contenuti in un documento
+    e trascrivere tali simboli in caratteri equivalenti comprensibili dalla macchina.
+
+\end{description}
+
+\subsection{Analisi Requisiti Utente}
+
+\begin{itemize}
+    \item Ottenere un elenco dei documenti visibili all'interno di
+        un'immagine e le componenti testuali specifiche in esso
+        riconoscibili.
+    \item Avere la possibilità di definire la natura dei documenti
+        oggetto del riconoscimento e delle informazioni testuali
+        rilevanti in essi contenute.
+\end{itemize}
+
+\subsection{Analisi Requisiti Sistema}
+
+\begin{itemize}
+    \item Implementare delle tecnologie per l'object detection e ocr allo stato dell'arte per
+    erogare in modo efficiente il servizio richiesto dal committente.
+    \item Fornire strumenti che mettono a disposizione la possibilita di rendere scalabile il numero
+    e la tipologia di documenti riconoscibili dall'applicativo
+\end{itemize}
+
+\section{Architettura del Sistema}
+
+\subsection{Scelte architetturali}
+
+Abbiamo optato per lo sviluppo di una soluzione web, Il nostro applicativo si suddivide in tre macro parti:
+- la parte frontend, sviluppata tramite tecnologie browser compatibili, js html CSS
+- la parte backend, sviluppata in python tramite la libreria flask per la creazione di servizi web
+- la parte di core bussness, ovvero il core dell'applicativo, sviluppata in python per l'implementazione di ocr e object detection
+
+Nella progettazione architetturale di tale applicativo, si è optato per
+l'utilizzo di librerie testate e rappresentanti lo stato dell'arte, inerentemente all'ambito applicativo sopracitato.\\
+Per quanto riguarda l'object detection, abbiamo selezionato la libreria Mask-R_CNN
+una libreria che oltre a object detection mette a disposizione anche segmentazione di immagini,
+una feature aggiuntiva che oltre a ritornare un rettangolo contenente un oggetto di una determinata classe nell'immagine ne
+ritorna anche la regione di pixel che lo rappresenta, tale feature comunque non è utilizzata nel nostro sistema,
+ma è tornata utile in fase di training in quanto possiamo allenare la nostra rete direttamente tramite i segmenti di documenti evitando
+la presenza dei polpastrelli che in alcuni casi possono portare la nostra rete fuori rotta.\\
+Invece per effettuare l'ocr abbiamo optato per la libreria tesseract, implementata in python tramite una libreria wrapper chiamata pytesseract\\
+
+le librerie sopracitate hanno portato alla necessita di importarne altre tra cui, tensorflow == 1.x,
+flask==2.0.8 sulle quali si basa mask-r_cnn, opencv per la gestione e la codifica di immagini.
+
+--> aggiungere descrizione piu dettagliata di mask-r_cnn
+
+\subsection{Training}
+
+essendo il nostro corebusiness basato su una rete neurale per la computer vision implementata tramite la libreria Mask-R_CNN, 
+una rete neurale molto complessa sulla quale facciamo transfer learning, ovvero alleniamo solamente gli strati piu estrerni per adattare i pesi e la struttura
+della stessa al riconoscimento di un certo numero di classi definibili da noi sviluppatori e in ultima istanza dall'utente utilizzatore, ci siamo appoggiati
+al servizio colab di google per il training della rete tramite la computazione limitata ma estremamente potente messa 
+a dispozione da tale servizio.
+Per rendere ripetibile tutto cio abbiamo reso disponibile il dataset da noi utilizzato e il file jupiter (tecnologia su cui si basa colab),
+cosi da poter ripetere la fase di training facendo l'opportuno tuning sui parametri e cosi da poter anche aggiungere nuove classi di oggetti e nuove istanze per il training.
+Infine si rimanda al link dell'applicativo web necessario alla creazione di annotazioni per le immagini utilizzate come istanze di training.
+http://www.robots.ox.ac.uk/~vgg/software/via/ \\
+
+--> aggiungere codice ipynb  debitamente commentato
+
+--> struttura di dataset con esempio di file di via_regions.json
+
+\subsection
+
+Il parte di core business è implementata in un modulo Python. Le funzionalità di
+riconoscimento sono rese disponibili tramite istanza di una classe
+\texttt{Detectron}, inizializzata tramite una struttura di
+configurazione definibile dall'utente in congiunzione con i pesi della
+rete neurale, per la massima estensibilità.
+
+Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
+\texttt{recognize} che implementa la funzione di riconoscimento.\\
+\texttt{recognize} accetta un oggetto \texttt{bytes}-like che
+rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
+OpenCV2. Dopo aver decodificato l'immagine questa viene passata
+attraverso la rete neurale Mask-R\_CNN precedentemente inizializzata, che
+individua delle ROI associate ai tipi di documento configurati, a ognuna
+delle quali sarà associato un dizionario. L'area di ogni ROI viene
+estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
+codificata in PNG in un oggetto \texttt{bytes}.
+
+Su questi snapshot viene poi applicato l'algoritmo di OCR della libreria
+tesseract. Quest'ultimo a sua volta restituirà una serie di record che
+rappresentano il testo trovato, il grado confidenza e la relativa
+posizione all'interno della ROI. Questi record sono identificati in base
+alla posizione o al formato, specificato tramite regex. Il testo dei
+record così individuati è aggiunto a un dizionario sotto il nome di
+``\texttt{attributes}''. L'oggetto di configurazione definisce quali di
+questi ``\texttt{attributes}'' sono necessari al riconoscimento del
+documento e solo quando tutti questi sono effettivamente stati
+individuati il documento viene marcato come valido. Uno degli attributi
+necessari può essere designato come chiave primaria, quando un documento
+è valido il valore della chiave primaria viene restituito nel dizionario
+sotto il nome di ``\texttt{primaryKey}'' e può essere utilizzato per
+l'identificazione univoca del documento appena scansionato. Si consiglia
+di indicare come chiave primaria il codice o numero identificativo
+univoco del documento, quando presente.\\
+La funzione \texttt{recognize} ritorna in output una lista di questi
+dizionari.
+
+\subsection{Backend}
+
+--> descrizione backend
+
+\subsection{Frontend}
+
+--> descrizione frontend
+
+\pagebreak
+
+\subsection{Esempio di configurazione}
+\begin{minted}{python}
+{
+    "weights": "percorso/ai/pesi.h5",
+    "classes": {
+        "Tesserino": {
+            "lang": "ita",
+            "min_conf": 50,
+            "primaryKey": "Matricola",
+            "regions": [
+                {
+                    "name": "Matricola",
+                    "type": "regex",
+                    "rule": "^\\d{6}$",
+                    "needed": True
+                },
+                {
+                    "name": "Nome",
+                    "type": "box",
+                    "rule": [0, 0.6, 0.2, 1],
+                    "needed": False
+                }
+            ]
+        }
+    }
+}
+\end{minted}
+
+\begin{figure}[p]
+  \caption{Diagramma delle Classi}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_class.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma di classe
+
+\begin{figure}[p]
+  \caption{Diagramma di Stato}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma di stato per oggetto Detectron
+
+\begin{figure}[p]
+  \caption{Diagramma di Caso d'Uso}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma caso d'uso
+
+\begin{figure}[p]
+  \caption{Diagramma di Sequenza}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_seq.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma di sequenza (aggiungendo classe di libreria mrcnn)
+
+\begin{figure}[p]
+  \caption{Diagramma di Comunicazione}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_comm.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma di comunicazione (aggiungendo classe di libreria mrcnn)
+
+\begin{figure}[p]
+  \caption{Diagramma di Attività}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
+\end{figure}
+
+--> aggiungere descrizione diagramma di attivita
+
+\pagebreak
+
+\section{Design Pattern}
+
+Un design pattern che in potenza poterebbe essere applicato è il
+Protection Proxy.\\
+Inizialmente non eravamo convinti della thread safness della funzione
+\texttt{recognize} nella classe \texttt{Detectron}. Una possibile
+soluzione consisterebbe nel creare una classe \texttt{DetectronPool}, la
+quale nell'inizializzazione carica una pool di oggetti
+\texttt{Detectron}. Tale classe avrà un metodo \texttt{recognize} che
+rimanderà all'omonimo metodo di \texttt{Detectron}, il quale gestirebbe
+l'allocazione della risorsa al thread chiamante in modo trasparente
+tramite un semaforo contatore inizializzato al numero di
+\texttt{Detectron} nella pool, garantendo la mutua esclusione
+nell'esecuzione del metodo \texttt{recognize} in maniera totalmente
+trasparente per l'utilizzatore.
+
+\begin{figure}[h]
+  \caption{Diagramma di Classe Proxy}
+  \centering
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_proxy.pdf}
+\end{figure}
+
+\end{document}
