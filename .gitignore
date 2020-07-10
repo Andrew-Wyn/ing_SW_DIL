@@ -173,6 +173,7 @@ Temporary Items
 ## GENERALS
 
 *.aux
+*.out
 *.pdf
 .vscode/
 src/config.json
