@@ -17,4 +17,4 @@ report_v2.pdf: report_v2.tex $(DIAGRAMS)
 	draw.io --crop -x -o $@ $<
 
 clean:
-	rm -f report.pdf $(DIAGRAMS) report.aux report.log
+	rm -f report_v2.pdf report.pdf $(DIAGRAMS) *.aux *.log
