@@ -12,6 +12,8 @@
 
 \setminted[python]{frame=lines,framesep=1em}
 
+\newcommand{\mrcnn}{Mask-R\_CNN}
+
 \begin{document}
 
 \title{Riconoscimento Documenti}
@@ -21,7 +23,7 @@
 \maketitle
 
 \begin{abstract}
-    Si descrive l'implementazione di una libreria basata su Mask-RCNN e
+    Si descrive l'implementazione di una libreria basata su \mrcnn\ e
     tesseract per il riconoscimento interattivo di documenti
     identificativi e tessere.
     --> modificare %TODO
@@ -119,7 +121,7 @@ Nella progettazione architetturale di tale applicativo, si è optato per
 l'utilizzo di librerie testate e rappresentanti lo stato dell'arte,
 inerentemente all'ambito applicativo sopracitato.\\
 Per quanto riguarda l'object detection, abbiamo selezionato la libreria
-\textbf{Mask-R\_CNN} una libreria che oltre a effettuare object detection mette a
+\textbf{\mrcnn} una libreria che oltre a effettuare object detection mette a
 disposizione anche segmentazione di immagini, una feature aggiuntiva che
 oltre a ritornare un rettangolo contenente un oggetto di una determinata
 classe nell'immagine ne ritorna anche la regione di pixel che lo
@@ -134,7 +136,7 @@ pytesseract.
 
 Le librerie appena citate hanno portato alla necessità di importarne
 altre tra cui, tensorflow$=$1.x, flask$=$2.0.8 sulle quali si basa
-Mask-R\_CNN, opencv per la gestione e la codifica di immagini.
+\mrcnn, opencv per la gestione e la codifica di immagini.
 
 Per la gestione delle dipendenze in fase di sviluppo abbiamo utilizzato
 due strumenti propri dell'ambiente python, pipenv che mette a
@@ -150,7 +152,7 @@ qualsiasi macchina.
 
 \subsection{Mask}
 
-There are two stages of Mask\_R-CNN. First, it generates proposals about
+There are two stages of \mrcnn. First, it generates proposals about
 the regions where there might be an object based on the input image.
 Second, it predicts the class of the object, refines the bounding box
 and generates a mask in pixel level of the object based on the first
@@ -170,7 +172,7 @@ classes(multi-categorical classified), bounding boxes and masks.
 \subsection{Training}
 
 Essendo il nostro corebusiness basato su una rete neurale per la
-computer vision implementata tramite la libreria Mask-R\_CNN, una rete
+computer vision implementata tramite la libreria \mrcnn, una rete
 neurale molto complessa sulla quale facciamo transfer learning, ovvero
 alleniamo solamente gli strati piu estrerni per adattare i pesi e la
 struttura della stessa al riconoscimento di un certo numero di classi
@@ -212,7 +214,7 @@ Una volta inizializzato, un oggetto \texttt{Detectron} offre un mketodo
 \texttt{recognize} accetta un oggetto \texttt{bytes}-like che
 rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
 OpenCV2. Dopo aver decodificato l'immagine questa viene passata
-attraverso la rete neurale Mask-R\_CNN precedentemente inizializzata, che
+attraverso la rete neurale \mrcnn\ precedentemente inizializzata, che
 individua delle ROI associate ai tipi di documento configurati, a ognuna
 delle quali sarà associato un dizionario. L'area di ogni ROI viene
 estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
