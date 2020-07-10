@@ -60,10 +60,14 @@ presenti nel documento precedentemente identificato.
 
 \subsection{Glossario e Dominio applicativo}
 
-Il dominio applicativo di tale sistema è l'ambito della computer vision
-e del ocr. In ultimo stadio l'utente finale avra a disposizione un
-interfaccia grafica attraverso la quale in modo intuitivo ed efficiente
-potra avere accesso al servizio erogato
+Il prodotto risponde all'esigenza di individuare la tipologia ed
+eseguire il parsing dei prinicipali dati testuali esposti in vari
+documenti di riconoscimento, tramite webcam.
+I domini applicativi di tale sistema e le problematiche ad essi connesse
+sono sono quelli dell'ambito della computer vision e dell'OCR.
+L'utente finale avrà a disposizione un'interfaccia grafica attraverso la
+quale, in modo intuitivo ed efficiente, potrà avere accesso al servizio
+erogato.
 
 \begin{description}
     \item[Computer Vision] Insieme di metodologie algoritmiche e
@@ -80,6 +84,16 @@ potra avere accesso al servizio erogato
         trascrizione di tali simboli in caratteri equivalenti.
 \end{description}
 
+\subsection{Modellazione Concettuale del Sistema}
+
+Il compito di interagire con l'utente finale sarà a carico di una
+componente di interfaccia grafica ``frontend'' che si occuperà
+dell'accesso alla videocamera e mostrerà uno storico dei documenti
+riconosciuti e in corso di riconoscimento in tempo reale, mentre
+delegherà il compito di applicare e interpretare i risultati delle
+primitive di riconoscimento e OCR a una componente ``buisiness logic''
+configurabile dal committente potendo scegliere il tipo di documenti da
+riconoscere e le carateristiche testuali da ricercare.
 
 \section{Architettura del Sistema}
 
