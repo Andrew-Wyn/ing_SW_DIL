@@ -8,7 +8,7 @@ report.pdf: report.tex $(DIAGRAMS)
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 
-report_v2.pdf: report_v2.tex $(DIAGRAMS)
+report_v2.pdf: report_v2.tex document_recognition_29_1.png $(DIAGRAMS)
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 
