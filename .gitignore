@@ -176,4 +176,4 @@ Temporary Items
 *.pdf
 .vscode/
 src/config.json
-_minted-report/
+_minted-*/
