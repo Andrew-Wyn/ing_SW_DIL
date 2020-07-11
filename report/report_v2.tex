@@ -387,7 +387,7 @@ rappresenta le funzionalita di object detection,
 quest'utlimo includera poi il caso d'uso effettua ocr che si rappresenta
 la componente per effettuare ocr.
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma di Caso d'Uso}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
@@ -407,7 +407,7 @@ applicativo, le quali classi saranno ereditate ed utilizzate in quanto
 tali dalla logica del nostro modulo di core business, vedere package
 documentCNN, e dal modulo di training, vedere modulo training.
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma delle Classi}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_class.pdf}
@@ -438,7 +438,7 @@ passerà nello stato di OCR Operations nel quale il nostro oggetto
 tramite funzioni esposte da pytesseract effettuera ocr sulle roi, finite
 tali operazioni ritoternera nello stato di ReadyForInference.\\
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma di Stato}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
@@ -447,7 +447,7 @@ tali operazioni ritoternera nello stato di ReadyForInference.\\
 \subsubsection{diagramma di sequenza (e comunicazione) per il
 funzionamento di riconoscimento}
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma di Sequenza}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_seq.pdf}
@@ -455,7 +455,7 @@ funzionamento di riconoscimento}
 
 --> aggiungere descrizione diagramma di sequenza (aggiungendo classe di libreria mrcnn)
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma di Comunicazione}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_comm.pdf}
@@ -500,7 +500,7 @@ inizializzato al numero di \texttt{Detectron} nella pool, garantendo la
 mutua esclusione nell'esecuzione del metodo \texttt{recognize} in
 maniera totalmente trasparente per l'utilizzatore.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \caption{Diagramma di Classe Proxy}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_proxy.pdf}
