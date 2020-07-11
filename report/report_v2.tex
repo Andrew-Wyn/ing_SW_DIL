@@ -371,6 +371,28 @@ Nel seguito si andranno a descrivere i diagrammi uml utilizzati in fase
 di progettazione e analisi architetturale nello sviluppo del nostro
 sistema.
 
+\subsubsection{Diagramma di caso d'uso per il funzionamento di
+riconoscimento}
+
+Si descrive il diagramma di caso d'uso per il caso d'uso di
+riconoscimento, tale diagramma necessario nella prima fase di
+progettazione ha messo sul tavolo quella che è a grandi linee la logica
+applicativa del nostro sistema, si noti la ripartizione e la
+differenziazioni di quattro principali casi d'uso, ovvero il
+riconoscimento sul quale si interfaccia direttamente il nostro attore
+principale, che estende il caso d'uso connection error in quanto gia
+stabilito che l'implementazione di tale applicativo sara una webapp.
+Il caso d'uso implementerà il caso d'uso riconosci frame, che
+rappresenta le funzionalita di object detection,
+quest'utlimo includera poi il caso d'uso effettua ocr che si rappresenta
+la componente per effettuare ocr.
+
+\begin{figure}[p]
+    \caption{Diagramma di Caso d'Uso}
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
+\end{figure}
+
 \subsubsection{Diagramma di classe completo}
 
 Si descrivono le classi presenti nella logica del nostro applicativo,
@@ -422,34 +444,6 @@ tali operazioni ritoternera nello stato di ReadyForInference.\\
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di stato per oggetto
-Detectron, rifare diagramma modificando stato con guardie
-
-\subsubsection{Diagramma di caso d'uso per il funzionamento di
-riconoscimento}
-
-Si descrive il diagramma di caso d'uso per il caso d'uso di
-riconoscimento, tale diagramma necessario nella prima fase di
-progettazione ha messo sul tavolo quella che è a grandi linee la logica
-applicativa del nostro sistema, si noti la ripartizione e la
-differenziazioni di quattro principali casi d'uso, ovvero il
-riconoscimento sul quale si interfaccia direttamente il nostro attore
-principale, che estende il caso d'uso connection error in quanto gia
-stabilito che l'implementazione di tale applicativo sara una webapp.
-Il caso d'uso implementerà il caso d'uso riconosci frame, che
-rappresenta le funzionalita di object detection,
-quest'utlimo includera poi il caso d'uso effettua ocr che si rappresenta
-la componente per effettuare ocr.
-
-\begin{figure}[p]
-    \caption{Diagramma di Caso d'Uso}
-    \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
-\end{figure}
-
---> aggiungere descrizione diagramma caso d'uso, aggiungere caso d'uso
-alternativo decodifica foto errata per il uc riconosci frame
-
 \subsubsection{diagramma di sequenza (e comunicazione) per il
 funzionamento di riconoscimento}
 
@@ -469,7 +463,7 @@ funzionamento di riconoscimento}
 
 --> aggiungere descrizione diagramma di comunicazione (aggiungendo classe di libreria mrcnn)
 
-\subsubsection{Diagramma di attività per l'attivita di processing di un
+\subsubsection{Diagramma di attività per l'attivita di cattura e processing di un
 frame}
 
 Il diagramma di classe in tal caso è stato sfruttato in fase di
@@ -489,8 +483,6 @@ caricato.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di attivita, modificare diagramma,
-aggiungere swimlanes lato client
 \pagebreak
 
 \section{Design Pattern}
