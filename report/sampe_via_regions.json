@@ -1,0 +1,47 @@
+{
+    "patente1.jpg2853411": {
+        "filename": "patente1.jpg",
+        "size": 2853411,
+        "regions": [
+            {
+                "shape_attributes": {
+                    "name": "polyline",
+                    "all_points_x": [
+                        1035,
+                        997,
+                        1050,
+                        2661,
+                        2699,
+                        2737,
+                        2711,
+                        2243,
+                        2185,
+                        2051,
+                        1955,
+                        1081,
+                        1035
+                    ],
+                    "all_points_y": [
+                        1576,
+                        556,
+                        510,
+                        498,
+                        529,
+                        1476,
+                        1530,
+                        1564,
+                        1491,
+                        1480,
+                        1580,
+                        1629,
+                        1576
+                    ]
+                },
+                "region_attributes": {
+                    "name": "patente"
+                }
+            }
+        ],
+        "file_attributes": {}
+    }
+}
