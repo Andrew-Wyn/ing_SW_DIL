@@ -151,7 +151,15 @@ esempio tensorflow$=$1.x è utilizzabile solamente con versioni di
 python$\leq$3.7.x con pyenv tale requisito puo essere soddisfatto su
 qualsiasi macchina.
 
-\subsection{Mask}
+Data la complessita computazionale delle operazioni messe a disposizione
+dalle librerie \mrcnn\ e pytesseract, si è optato per effettuare il
+processing di singoli frame intercorsi da quanti temporali vairabili a
+seconda del precedente riconoscimento, e non di uno stream video
+continuo, questo perchè non sarebbe garantita una fluidita
+nell'erogazione del servizio su gran parte parte delle macchine server
+sulle quali questa web app puo essere esposta.
+
+\subsection{Accenni strutturali di \mrcnn}
 
 Il funzionamento della rete \mrcnn\ consiste in due fasi. Nella prima
 fase la rete ritorna delle regioni le quali dovrebbero rappresentare
@@ -300,7 +308,19 @@ sul server, e quindi i costi operativi.
 
 \subsection{Backend}
 
---> descrizione backend
+Il backend è gestito da un server sviluppato utilizzando Flask. Il
+server in questione mette a disposizione un' API REST per permettere la
+comunicazione con la componente di core business. Viene
+allestito un server accessibile con protocollo https (richiesto dai
+browser moderni per richiedere i permessi necessari al fine di accedere
+a periferiche quali la webcam) il quale si occupa di fornire al browser
+dell'utente il codice del client per poi procedere nello scambio di
+informazioni come descritto nel paragrafo dedicato al frontend. Quando
+un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
+funzione di core business, i risultati vengono raffinati per essere
+interpretati in modo corretto dal client, dopodichè questi ultimi
+vengono inviati al client, che si occuperà di comunicare all'utente
+eventuali risultati.
 
 \subsection{Core Business}
 
@@ -310,7 +330,7 @@ una classe \texttt{Detectron}, inizializzata tramite una struttura di
 configurazione definibile dall'utente in congiunzione con i pesi della
 rete neurale, per la massima estensibilità.
 
-Una volta inizializzato, un oggetto \texttt{Detectron} offre un mketodo
+Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
 \texttt{recognize} che implementa la funzione di riconoscimento.\\
 \texttt{recognize} accetta un oggetto \texttt{bytes}-like che
 rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
@@ -345,6 +365,26 @@ dizionari.
 \subsubsection{Esempio di configurazione}
 \inputminted{python}{config.py}
 
+\subsection{Diagrammi UML}
+
+Nel seguito si andranno a descrivere i diagrammi uml utilizzati in fase
+di progettazione e analisi architetturale nello sviluppo del nostro
+sistema.
+
+\subsubsection{Diagramma di classe completo}
+
+Si descrivono le classi presenti nella logica del nostro applicativo,
+per lo sviluppo del frontend e del backend non è stata necessaria la
+concettualizzazione di alcuna classe, causa approccio funzionale delle
+tecnologie utilizzate.
+
+In tale diagramma si utilizza la rappresentazione della divisione in
+packaging, possiamo notare il package mrcnn, descritto con un livello di dettaglio
+necessario per la descrizione dell'utilizzo che ne fa il nostro
+applicativo, le quali classi saranno ereditate ed utilizzate in quanto
+tali dalla logica del nostro modulo di core business, vedere package
+documentCNN, e dal modulo di training, vedere modulo training.
+
 \begin{figure}[p]
     \caption{Diagramma delle Classi}
     \centering
@@ -353,13 +393,53 @@ dizionari.
 
 --> aggiungere descrizione diagramma di classe
 
+\subsubsection{Diagramma di stato per l'oggetto Detectron}
+
+Si descrive il diagramma di stato dell'oggetto Detectron proprio del
+modulo di core business durante il suo ciclo di vita  nel nostro
+applicativo.
+Vengono individuati 4 stati nel quale l'oggetto durante la sua presenza
+in memoria puo trovarsi.\\
+Lo stato Create che indica che il nostro oggeto contiene un modello di
+\mrcnn\ ma non ha ancora i pesi caricati e quindi non puo effettuare
+alcuna inferenza.
+Lo stato ReadyForInference, indica che il modello contenuto ha i pesi
+generati dalla fase di training caricati ed è pronto per effettuare
+inferenza.\\
+lo stato Recognizing, indica che il nostro oggetto Detectron ha
+processato l'immagine e sta aspettando il ritorno dell'inferenza tramite
+primitiva del modello della libreria \mrcnn.\\
+Una volta disponibili i risultati dell'inferenza se non sono state trovate
+delle regioni di interesse che rappresentano documenti nell'immagine
+allora si ritorna nello stato di ReadyForInstance, nel caso contrario
+passerà nello stato di OCR Operations nel quale il nostro oggetto
+tramite funzioni esposte da pytesseract effettuera ocr sulle roi, finite
+tali operazioni ritoternera nello stato di ReadyForInference.\\
+
 \begin{figure}[p]
     \caption{Diagramma di Stato}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di stato per oggetto Detectron
+--> aggiungere descrizione diagramma di stato per oggetto
+Detectron, rifare diagramma modificando stato con guardie
+
+\subsubsection{Diagramma di caso d'uso per il funzionamento di
+riconoscimento}
+
+Si descrive il diagramma di caso d'uso per il caso d'uso di
+riconoscimento, tale diagramma necessario nella prima fase di
+progettazione ha messo sul tavolo quella che è a grandi linee la logica
+applicativa del nostro sistema, si noti la ripartizione e la
+differenziazioni di quattro principali casi d'uso, ovvero il
+riconoscimento sul quale si interfaccia direttamente il nostro attore
+principale, che estende il caso d'uso connection error in quanto gia
+stabilito che l'implementazione di tale applicativo sara una webapp.
+Il caso d'uso implementerà il caso d'uso riconosci frame, che
+rappresenta le funzionalita di object detection,
+quest'utlimo includera poi il caso d'uso effettua ocr che si rappresenta
+la componente per effettuare ocr.
 
 \begin{figure}[p]
     \caption{Diagramma di Caso d'Uso}
@@ -367,7 +447,11 @@ dizionari.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma caso d'uso
+--> aggiungere descrizione diagramma caso d'uso, aggiungere caso d'uso
+alternativo decodifica foto errata per il uc riconosci frame
+
+\subsubsection{diagramma di sequenza (e comunicazione) per il
+funzionamento di riconoscimento}
 
 \begin{figure}[p]
     \caption{Diagramma di Sequenza}
@@ -385,14 +469,28 @@ dizionari.
 
 --> aggiungere descrizione diagramma di comunicazione (aggiungendo classe di libreria mrcnn)
 
+\subsubsection{Diagramma di attività per l'attivita di processing di un
+frame}
+
+Il diagramma di classe in tal caso è stato sfruttato in fase di
+progettazione per lo sviluppo dell'algoritmo per il processing di un
+frame ricevuto dall'frontend, in tale sezione si è astratta la logica di
+backend e core business con un unica componente di responsabilita.
+Il diagramma come già detto esplicita il funzionamento dell'algoritmo di
+recognize passando per loading di un frame tramite mezzo di
+comunicazione  con il frontend e poi descrive la semantica dell'utilizzo
+dell'utilizzo delle librerie di ocr (pytesseract) che ritorna gli
+ocr-box e computer vision (\mrcnn) che ritorna le roi associate al frame
+caricato.
+
 \begin{figure}[p]
     \caption{Diagramma di Attività}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di attivita
-
+--> aggiungere descrizione diagramma di attivita, modificare diagramma,
+aggiungere swimlanes lato client
 \pagebreak
 
 \section{Design Pattern}
