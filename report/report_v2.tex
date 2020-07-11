@@ -153,18 +153,18 @@ qualsiasi macchina.
 
 \subsection{Mask}
 
-Il funzionamento della rete \mrcnn consiste in due fasi.
-Nella prima fase la rete ritorna delle regioni le quali dovrebbero 
-rappresentare oggetti presenti sull'immagine di input.
-La seconda fase invece, effettua un inferenza sulla classe dell'oggetto,
-rifinisce il bounding box e genera la maschera, a livello di pixel,
-basandosi sull'output della prima fase, entrambe le fasi sono connesse
-alla struttura backbone. 
+Il funzionamento della rete \mrcnn\ consiste in due fasi. Nella prima
+fase la rete ritorna delle regioni le quali dovrebbero rappresentare
+oggetti presenti sull'immagine di input. La seconda fase invece,
+effettua un inferenza sulla classe dell'oggetto, rifinisce il bounding
+box e genera la maschera, a livello di pixel, basandosi sull'output
+della prima fase. Entrambe le fasi sono connesse alla struttura
+backbone.
 
 \begin{figure}[H]
-    \caption{Struttura Mask_RCNN}
+    \caption{Struttura \mrcnn}
     \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{mask_descriptiom.jpeg}
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{mask_description.jpeg}
 \end{figure}
 
 \subsection{Training}
@@ -185,22 +185,27 @@ parametri e cosi da poter anche aggiungere nuove classi di oggetti e
 nuove istanze per il training. Infine si rimanda al link
 dell'applicativo web necessario alla creazione di annotazioni per le
 immagini utilizzate come istanze di training.
-\url{http://www.robots.ox.ac.uk/~vgg/software/via/}\\
+\url{http://www.robots.ox.ac.uk/~vgg/software/via/}
 
-Per un riscontro pratico si faccia riferimento al notebook jupiter a fine report.
+Per un riscontro pratico si faccia riferimento al notebook Jupyter a
+fine report.
 
-subsubsection {Dataset}
+\subsubsection{Dataset}
 
-Si descrive ora la struttura del dataset da noi generato, è necessario seguirne la struttra per 
-possibili ampliamenti e per aggiunta di classi di riconoscimento.
-Non è invece necessario essere consistenti rispetto alle classi da inferire nella nomenclatura
-delle sottodirectory di training e validating, la semantica di codice farà riferimento, 
-per rifersirsi alle immagini e alle loro annotazioni, solamente al contenuto 
-del file via_regions.json presente in ogni directory contenente immagini, mentre 
-le directory più ad alto livello (testing, training e validating) sono logicamente differenti
-per la semantica del nostro esempio.\\
-E' comunque buona pratica rendere leggibile il dataset mantenendo una struttura il piu descrittiva possibile,
-come nel nostro esempio.\\
+% TODO: sbrogliare
+Si descrive ora la struttura del dataset da noi generato, è necessario
+seguirne la struttra per possibili ampliamenti e per aggiunta di classi
+di riconoscimento. Non è invece necessario essere consistenti rispetto
+alle classi da inferire nella nomenclatura delle sottodirectory di
+training e validating, la semantica di codice farà riferimento, per
+rifersirsi alle immagini e alle loro annotazioni, solamente al contenuto
+del file \texttt{via\_regions.json} presente in ogni directory
+contenente immagini, mentre le directory più ad alto livello (testing,
+training e validating) sono logicamente differenti per la semantica del
+nostro esempio.\\
+E' comunque buona pratica rendere leggibile il dataset mantenendo una
+struttura il piu descrittiva possibile, come nel nostro esempio.
+
 \dirtree{%
     .1 /.
     .2 testing.
@@ -209,31 +214,32 @@ come nel nostro esempio.\\
     .3 testN.jpg.
     .2 validating.
     .3 tesserino.
-    .4 tesserino1.jpg
+    .4 tesserino1.jpg.
     .4 ....
-    .4 tesserinoN.jpg
-    .4 via_regions.json
+    .4 tesserinoN.jpg.
+    .4 via\_regions.json.
     .3 patente.
-    .4 patente1.jpg
+    .4 patente1.jpg.
     .4 ....
-    .4 patenteN.jpg
-    .4 via_regions.json
+    .4 patenteN.jpg.
+    .4 via\_regions.json.
     .2 training.
     .3 tesserino.
-    .4 tesserino1.jpg
+    .4 tesserino1.jpg.
     .4 ....
-    .4 tesserinoN.jpg
-    .4 via_regions.json
+    .4 tesserinoN.jpg.
+    .4 via\_regions.json.
     .3 patente.
-    .4 patente1.jpg
+    .4 patente1.jpg.
     .4 ....
-    .4 patenteN.jpg
-    .4 via_regions.json
+    .4 patenteN.jpg.
+    .4 via\_regions.json.
 }
 
-Di seguito è riportato un esempio di singola istanza di un file via_regions.json.\\
+Di seguito è riportato il contenuto di un file
+\texttt{via\_regions.json} a titolo esemplificativo.
 
-\inputminted{json}{sample_via_regions.json}
+\inputminted{json}{via_regions.json}
 
 \subsection{Frontend}
 
