@@ -243,7 +243,60 @@ Di seguito è riportato il contenuto di un file
 
 \subsection{Frontend}
 
---> descrizione frontend
+Il frontend è realizzato tramite la coniugazione delle tre principali
+tecnologie web: HTML, CSS e JavaScript.
+
+L'interfaccia è studiata in modo molto semplice e minimale: l'area
+dell'applicazione è limitata in larghezza per accomodare diverse
+dimensioni dello schermo. Il riquadro contenente lo stream video è
+situato nell'angolo in alto a sinistra e occupa circa il 60% in
+larghezza dell'area disponibile. Al disotto di esso è sito un container
+della stessa dimensione che contiene le preview temporanee dei documenti
+in corso di rilevamento, e alla sua destra si ha una colonna contenente
+i documenti identificati con buona probabilità che riempie lo spazio
+restante.
+
+Il client preleva attraverso il browser un fotogramma dallo stream video
+proveniente dalla webcam, ottenuto dopo esplicito consenso da parte
+dell'utente, e lo invia al server per l'elaborazione tramite una
+richiesta POST diretta a un endopint REST /recognize. Il body di questa
+richiesta è codificato in JSON e contiene i dati dell'immagine in
+compressione JPEG convertiti in stringa di testo in base64.
+
+Una volta ricevuta la risposta del server, anch'essa codificata in JSON
+il client parserà le informazioni ricevute e, se presenti, stamperà
+sullo schermo le porzioni di immagine contenenti i documenti appena
+identificati specificandone la tipologia in una sezione dedicata al di
+sotto del riquadro dello stream video, che mostrerà solo i dati relativi
+all'ultima acquisizione.
+
+Quando un documento contiene tutti i dati necessari all'identificazione
+questo viene inserito, assieme a tutti i dati raccolti, in un elenco
+presentato a destra del riquadro video. Questo elenco è permanente ma,
+quando un documento viene identificato per la seconda volta, la nuova
+versione andrà a sovrascrivere la precedente. Due versioni dello stesso
+documento sono identificate tramite il valore di un campo speciale su di
+esso presente specifico per ogni classe, detto primaryKey.
+
+Una volta stampate le informazioni rilevanti sullo schermo il client si
+occuperà di acquisire un nuovo fotogramma e di ripetere il ciclo.
+Ovviamente le prestazioni delle operazioni sopra descritte sono
+influenzate notevolmente dalla larghezza di banda di rete disponibile.
+La qualità e l'efficacia della rilevazione del testo sono inoltre
+fortemente dipendenti dalla qualità della webcam attraverso la quale il
+client acquisisce lo stream video.
+
+Un'idea che avremmo potuto mettere in pratica per migliorare le
+prestazioni e l'efficienza dell'intero sistema sarebbe stata quella di
+implementare lato client una semplice CNN molto più leggera rispetto a
+quella utilizzata dal server, con il compito di capire quali immagini in
+via di acquisizione avrebbero effettivamente potuto contenere dei
+documenti. In questo modo avremmo potuto evitare di inviare al server
+foto con un'altissima probabilità di non contenere documenti, ad esempio
+foto scattate prima o dopo che l'utente si fosse messo in posizione.
+Questo avrebbe alleggerito tanto il carico sulla rete (a beneficio degli
+utenti con una connessione meno stabile) quanto il carico computazionale
+sul server, e quindi i costi operativi.
 
 \subsection{Backend}
 
