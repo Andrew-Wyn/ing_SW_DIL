@@ -13,13 +13,16 @@ from document_CNN import Detectron
 
 class TestSet(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+            try:
+                _ = self._model
+            except AttributeError:
+                super().__init__(*args, **kwargs)
 
-        with open(f"{scriptdir}/../src/model/config.json") as f:
-            config = json.load(f)
+                with open(f"{scriptdir}/../src/model/config.json") as f:
+                    config = json.load(f)
 
-        config["weights"] = f"{scriptdir}/../src/{config['weights']}"
-        self._model = Detectron(config["weights"], config["classes"])
+                config["weights"] = f"{scriptdir}/../src/{config['weights']}"
+                self._model = Detectron(config["weights"], config["classes"])
 
     def test_tesserino(self):
         """
@@ -30,10 +33,11 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = self._model.recognize(image)
-        attributes = result[0]["attributes"]
 
-        expected = json.loads('{"Matricola": ["311279"], "Nome": ["Luca", "Moroni"]}')
-        self.assertEqual(attributes, expected)
+        del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
+
+        expected = json.loads('[{"type": "Tesserino","attributes": {"Nome": ["Luca","Moroni"],"Matricola": ["311279"]},"valid": true,"primaryKey": ["311279"]}]')
+        self.assertEqual(result, expected)
 
     def test_patente(self):
         """
@@ -44,9 +48,11 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = self._model.recognize(image)
-        attributes = result[0]["attributes"]
-        expected = json.loads('{"Numero": ["TR5160189G"]}')
-        self.assertEqual(attributes, expected)
+
+        del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
+
+        expected = json.loads('[{"type": "Patente","attributes": {"Numero": ["TR5160189G"]},"valid": true,"primaryKey": ["TR5160189G"]}]')
+        self.assertEqual(result, expected)
 
     def test_bg(self):
         """

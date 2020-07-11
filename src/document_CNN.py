@@ -115,7 +115,7 @@ class Detectron:
 
             try:
                 ocr_data = image_to_data(
-                        snapshot_gray,
+                        snapshot,
                         lang=class_["lang"],
                         output_type=Output.DICT)
             except TesseractError:

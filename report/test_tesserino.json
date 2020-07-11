@@ -1,0 +1,18 @@
+[
+    {
+        "type": "Tesserino",
+        "attributes": {
+            "Nome": [
+                "Luca",
+                "Moroni"
+            ],
+            "Matricola": [
+                "311279"
+            ]
+        },
+        "valid": true,
+        "primaryKey": [
+            "311279"
+        ]
+    }
+]

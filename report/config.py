@@ -19,6 +19,19 @@ config = {
                     "needed": False
                 }
             ]
+        },
+        "Patente": {
+            "lang": "ita",
+            "min_conf": 50,
+            "primaryKey": "Numero",
+            "regions": [
+                {
+                    "name": "Numero",
+                    "type": "regex",
+                    "rule": "^[A-Z]{2}\\d{7}[A-Z]$",
+                    "needed": true
+                }
+            ]
         }
     }
 }
