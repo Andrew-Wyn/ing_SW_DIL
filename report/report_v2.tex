@@ -249,122 +249,6 @@ Di seguito è riportato il contenuto di un file
 
 \inputminted{json}{via_regions.json}
 
-\subsection{Frontend}
-
-Il frontend è realizzato tramite la coniugazione delle tre principali
-tecnologie web: HTML, CSS e JavaScript.
-
-L'interfaccia è studiata in modo molto semplice e minimale: l'area
-dell'applicazione è limitata in larghezza per accomodare diverse
-dimensioni dello schermo. Il riquadro contenente lo stream video è
-situato nell'angolo in alto a sinistra e occupa circa il 60% in
-larghezza dell'area disponibile. Al disotto di esso è sito un container
-della stessa dimensione che contiene le preview temporanee dei documenti
-in corso di rilevamento, e alla sua destra si ha una colonna contenente
-i documenti identificati con buona probabilità che riempie lo spazio
-restante.
-
-Il client preleva attraverso il browser un fotogramma dallo stream video
-proveniente dalla webcam, ottenuto dopo esplicito consenso da parte
-dell'utente, e lo invia al server per l'elaborazione tramite una
-richiesta POST diretta a un endopint REST /recognize. Il body di questa
-richiesta è codificato in JSON e contiene i dati dell'immagine in
-compressione JPEG convertiti in stringa di testo in base64.
-
-Una volta ricevuta la risposta del server, anch'essa codificata in JSON
-il client parserà le informazioni ricevute e, se presenti, stamperà
-sullo schermo le porzioni di immagine contenenti i documenti appena
-identificati specificandone la tipologia in una sezione dedicata al di
-sotto del riquadro dello stream video, che mostrerà solo i dati relativi
-all'ultima acquisizione.
-
-Quando un documento contiene tutti i dati necessari all'identificazione
-questo viene inserito, assieme a tutti i dati raccolti, in un elenco
-presentato a destra del riquadro video. Questo elenco è permanente ma,
-quando un documento viene identificato per la seconda volta, la nuova
-versione andrà a sovrascrivere la precedente. Due versioni dello stesso
-documento sono identificate tramite il valore di un campo speciale su di
-esso presente specifico per ogni classe, detto primaryKey.
-
-Una volta stampate le informazioni rilevanti sullo schermo il client si
-occuperà di acquisire un nuovo fotogramma e di ripetere il ciclo.
-Ovviamente le prestazioni delle operazioni sopra descritte sono
-influenzate notevolmente dalla larghezza di banda di rete disponibile.
-La qualità e l'efficacia della rilevazione del testo sono inoltre
-fortemente dipendenti dalla qualità della webcam attraverso la quale il
-client acquisisce lo stream video.
-
-Un'idea che avremmo potuto mettere in pratica per migliorare le
-prestazioni e l'efficienza dell'intero sistema sarebbe stata quella di
-implementare lato client una semplice CNN molto più leggera rispetto a
-quella utilizzata dal server, con il compito di capire quali immagini in
-via di acquisizione avrebbero effettivamente potuto contenere dei
-documenti. In questo modo avremmo potuto evitare di inviare al server
-foto con un'altissima probabilità di non contenere documenti, ad esempio
-foto scattate prima o dopo che l'utente si fosse messo in posizione.
-Questo avrebbe alleggerito tanto il carico sulla rete (a beneficio degli
-utenti con una connessione meno stabile) quanto il carico computazionale
-sul server, e quindi i costi operativi.
-
-\subsection{Backend}
-
-Il backend è gestito da un server sviluppato utilizzando Flask. Il
-server in questione mette a disposizione un' API REST per permettere la
-comunicazione con la componente di core business. Viene
-allestito un server accessibile con protocollo https (richiesto dai
-browser moderni per richiedere i permessi necessari al fine di accedere
-a periferiche quali la webcam) il quale si occupa di fornire al browser
-dell'utente il codice del client per poi procedere nello scambio di
-informazioni come descritto nel paragrafo dedicato al frontend. Quando
-un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
-funzione di core business, i risultati vengono raffinati per essere
-interpretati in modo corretto dal client, dopodichè questi ultimi
-vengono inviati al client, che si occuperà di comunicare all'utente
-eventuali risultati.
-
-\subsection{Core Business}
-
-Il parte di core business è implementata in un modulo Python. Le
-funzionalità di riconoscimento sono rese disponibili tramite istanza di
-una classe \texttt{Detectron}, inizializzata tramite una struttura di
-configurazione definibile dall'utente in congiunzione con i pesi della
-rete neurale, per la massima estensibilità.
-
-Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
-\texttt{recognize} che implementa la funzione di riconoscimento.\\
-\texttt{recognize} accetta un oggetto \texttt{bytes}-like che
-rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
-OpenCV2. Dopo aver decodificato l'immagine questa viene passata
-attraverso la rete neurale \mrcnn\ precedentemente inizializzata, che
-individua delle ROI associate ai tipi di documento configurati, a ognuna
-delle quali sarà associato un dizionario. L'area di ogni ROI viene
-estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
-codificata in PNG in un oggetto \texttt{bytes}.
-
-Su questi snapshot viene poi applicato l'algoritmo di OCR della libreria
-tesseract. Quest'ultimo a sua volta restituirà una serie di record che
-rappresentano il testo trovato, il grado confidenza e la relativa
-posizione all'interno della ROI. Questi record sono identificati in base
-alla posizione o al formato, specificato tramite regex. Il testo dei
-record così individuati è aggiunto a un dizionario sotto il nome di
-``\texttt{attributes}''. L'oggetto di configurazione definisce quali di
-questi ``\texttt{attributes}'' sono necessari al riconoscimento del
-documento e solo quando tutti questi sono effettivamente stati
-individuati il documento viene marcato come valido. Uno degli attributi
-necessari può essere designato come chiave primaria, quando un documento
-è valido il valore della chiave primaria viene restituito nel dizionario
-sotto il nome di ``\texttt{primaryKey}'' e può essere utilizzato per
-l'identificazione univoca del documento appena scansionato. Si consiglia
-di indicare come chiave primaria il codice o numero identificativo
-univoco del documento, quando presente.\\
-La funzione \texttt{recognize} ritorna in output una lista di questi
-dizionari.
-
-\pagebreak
-
-\subsubsection{Esempio di configurazione}
-\inputminted{python}{config.py}
-
 \subsection{Diagrammi UML}
 
 Nel seguito si andranno a descrivere i diagrammi uml utilizzati in fase
@@ -436,7 +320,7 @@ delle regioni di interesse che rappresentano documenti nell'immagine
 allora si ritorna nello stato di ReadyForInstance, nel caso contrario
 passerà nello stato di OCR Operations nel quale il nostro oggetto
 tramite funzioni esposte da pytesseract effettuera ocr sulle roi, finite
-tali operazioni ritoternera nello stato di ReadyForInference.\\
+tali operazioni ritoternera nello stato di ReadyForInference.
 
 \begin{figure}[H]
     \caption{Diagramma di Stato}
@@ -447,13 +331,27 @@ tali operazioni ritoternera nello stato di ReadyForInference.\\
 \subsubsection{diagramma di sequenza (e comunicazione) per il
 funzionamento di riconoscimento}
 
+Si descrive la logica del funzionamento del caso d'uso riconoscimento
+tramite i diagrammi di sequenza e comunicazione.
+Come rappresentato il nostro sistema mette in gioco l'utilizzo di varie
+componenti, il nostro attore principale si interfaccia con una
+componente di frontend, la quale entrerà in un loop nel quale dall'input
+video andrà a prelevare il frame corrente, passando tale frame alla
+compomente di backend, impementata nell'oggetto app, quest'ultimo che
+passera, dopo eventuali decodifiche, l'immagine all'oggetto di core
+business detectron, il quale tramite l'utilizzo di metodi e primitive
+proprie delle librerie \mrcnn\ e pytesseract crea un dizionario
+contenente per ogni documento una lista di stringhe rappresentanti il
+testo riconosciuto.
+
 \begin{figure}[H]
     \caption{Diagramma di Sequenza}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_seq.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di sequenza (aggiungendo classe di libreria mrcnn)
+Di seguito è rappresentato il corrispettivo diagramma di comunicazione
+associato.
 
 \begin{figure}[H]
     \caption{Diagramma di Comunicazione}
@@ -461,9 +359,7 @@ funzionamento di riconoscimento}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_comm.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di comunicazione (aggiungendo classe di libreria mrcnn)
-
-\subsubsection{Diagramma di attività per l'attivita di cattura e processing di un
+\subsubsection{Diagramma di attività per l'attività di cattura e processing di un
 frame}
 
 Il diagramma di classe in tal caso è stato sfruttato in fase di
@@ -482,6 +378,125 @@ caricato.
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
 \end{figure}
+
+\pagebreak
+
+\subsection{Frontend}
+
+Il frontend è realizzato tramite la coniugazione delle tre principali
+tecnologie web: HTML, CSS e JavaScript.
+
+L'interfaccia è studiata in modo molto semplice e minimale: l'area
+dell'applicazione è limitata in larghezza per accomodare diverse
+dimensioni dello schermo. Il riquadro contenente lo stream video è
+situato nell'angolo in alto a sinistra e occupa circa il 60% in
+larghezza dell'area disponibile. Al disotto di esso è sito un container
+della stessa dimensione che contiene le preview temporanee dei documenti
+in corso di rilevamento, e alla sua destra si ha una colonna contenente
+i documenti identificati con buona probabilità che riempie lo spazio
+restante.
+
+Il client preleva attraverso il browser un fotogramma dallo stream video
+proveniente dalla webcam, ottenuto dopo esplicito consenso da parte
+dell'utente, e lo invia al server per l'elaborazione tramite una
+richiesta POST diretta a un endopint REST \texttt{/recognize}. Il body
+di questa richiesta è codificato in JSON e contiene i dati dell'immagine
+in compressione JPEG convertiti in stringa di testo in base64.
+
+Una volta ricevuta la risposta del server, anch'essa codificata in JSON
+il client parserà le informazioni ricevute e, se presenti, stamperà
+sullo schermo le porzioni di immagine contenenti i documenti appena
+identificati specificandone la tipologia in una sezione dedicata al di
+sotto del riquadro dello stream video, che mostrerà solo i dati relativi
+all'ultima acquisizione.
+
+Quando un documento contiene tutti i dati necessari all'identificazione
+questo viene inserito, assieme a tutti i dati raccolti, in un elenco
+presentato a destra del riquadro video. Questo elenco è permanente ma,
+quando un documento viene identificato per la seconda volta, la nuova
+versione andrà a sovrascrivere la precedente. Due versioni dello stesso
+documento sono identificate tramite il valore di un campo speciale su di
+esso presente specifico per ogni classe, detto primaryKey.
+
+Una volta stampate le informazioni rilevanti sullo schermo il client si
+occuperà di acquisire un nuovo fotogramma e di ripetere il ciclo.
+Ovviamente le prestazioni delle operazioni sopra descritte sono
+influenzate notevolmente dalla larghezza di banda di rete disponibile.
+La qualità e l'efficacia della rilevazione del testo sono inoltre
+fortemente dipendenti dalla qualità della webcam attraverso la quale il
+client acquisisce lo stream video.
+
+Un'idea che avremmo potuto mettere in pratica per migliorare le
+prestazioni e l'efficienza dell'intero sistema sarebbe stata quella di
+implementare lato client una semplice CNN molto più leggera rispetto a
+quella utilizzata dal server, con il compito di capire quali immagini in
+via di acquisizione avrebbero effettivamente potuto contenere dei
+documenti. In questo modo avremmo potuto evitare di inviare al server
+foto con un'altissima probabilità di non contenere documenti, ad esempio
+foto scattate prima o dopo che l'utente si fosse messo in posizione.
+Questo avrebbe alleggerito tanto il carico sulla rete (a beneficio degli
+utenti con una connessione meno stabile) quanto il carico computazionale
+sul server, e quindi i costi operativi.
+
+\subsection{Backend}
+
+Il backend è gestito da un server sviluppato utilizzando Flask. Il
+server in questione mette a disposizione un'API REST per permettere la
+comunicazione con la componente di core business. Viene
+allestito un server accessibile con protocollo https (richiesto dai
+browser moderni per richiedere i permessi necessari al fine di accedere
+a periferiche quali la webcam) il quale si occupa di fornire al browser
+dell'utente il codice del client per poi procedere nello scambio di
+informazioni come descritto nel paragrafo dedicato al frontend. Quando
+un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
+funzione di core business, i risultati vengono raffinati per essere
+interpretati in modo corretto dal client, dopodichè questi ultimi
+vengono inviati al client, che si occuperà di comunicare all'utente
+eventuali risultati.
+
+\subsection{Core Business}
+
+Il parte di core business è implementata in un modulo Python. Le
+funzionalità di riconoscimento sono rese disponibili tramite istanza di
+una classe \texttt{Detectron}, inizializzata tramite una struttura di
+configurazione definibile dall'utente in congiunzione con i pesi della
+rete neurale, per la massima estensibilità.
+
+Una volta inizializzato, un oggetto \texttt{Detectron} offre un metodo
+\texttt{recognize} che implementa la funzione di riconoscimento.\\
+\texttt{recognize} accetta un oggetto \texttt{bytes}-like che
+rappresenta l'immagine in un qualsiasi formato supportato dalla libreria
+OpenCV2. Dopo aver decodificato l'immagine questa viene passata
+attraverso la rete neurale \mrcnn\ precedentemente inizializzata, che
+individua delle ROI associate ai tipi di documento configurati, a ognuna
+delle quali sarà associato un dizionario. L'area di ogni ROI viene
+estratta dall'immagine e memorizzata alla chiave ``\texttt{snapshot}'',
+codificata in PNG in un oggetto \texttt{bytes}.
+
+Su questi snapshot viene poi applicato l'algoritmo di OCR della libreria
+tesseract. Quest'ultimo a sua volta restituirà una serie di record che
+rappresentano il testo trovato, il grado confidenza e la relativa
+posizione all'interno della ROI. Questi record sono identificati in base
+alla posizione o al formato, specificato tramite regex. Il testo dei
+record così individuati è aggiunto a un dizionario sotto il nome di
+``\texttt{attributes}''. L'oggetto di configurazione definisce quali di
+questi ``\texttt{attributes}'' sono necessari al riconoscimento del
+documento e solo quando tutti questi sono effettivamente stati
+individuati il documento viene marcato come valido. Uno degli attributi
+necessari può essere designato come chiave primaria, quando un documento
+è valido il valore della chiave primaria viene restituito nel dizionario
+sotto il nome di ``\texttt{primaryKey}'' e può essere utilizzato per
+l'identificazione univoca del documento appena scansionato. Si consiglia
+di indicare come chiave primaria il codice o numero identificativo
+univoco del documento, quando presente.\\
+La funzione \texttt{recognize} ritorna in output una lista di questi
+dizionari.
+
+\pagebreak
+
+\subsubsection{Esempio di configurazione}
+
+\inputminted{python}{config.py}
 
 \pagebreak
 
@@ -505,6 +520,28 @@ maniera totalmente trasparente per l'utilizzatore.
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_proxy.pdf}
 \end{figure}
+
+\section{Test}
+
+Si è deciso di effettuare test funzionali rispetto al metodo recognize
+della classe detectron.\\
+Per la generazione dei casi di test si è utilizzato l'approccio della
+divisione in classi di equivalenza, andando ad effettuare un caso di
+test rappresentativo per ogni classe definita dall'input e l'output del nostro
+metodo.\\
+Andiamo a definire le classi di equivalenza per noi significative,
+Avremo un numero di classi valide per ogni tipologia di documento,
+riconoscibile dal sistema, e quindi definiremo un numero di casi di
+test equivalenti ognuno rappresentato da un immagine contenente tale
+documento, una classe valida che prende in input un
+immagine che non contiene alcun documento conosciuto dal sistema, e una
+classe non valida che contiene tutti gli input che non rappresentano
+immagini, quest'ultima testata tramite una stringa di byte casuale.\\
+In tal modo abbiamo coperto tutti i possibili input del nostro metodo
+andando ad esplicitare un test set valido per verificarne il
+funzionamento.
+
+--> foto e output
 
 \pagebreak
 
