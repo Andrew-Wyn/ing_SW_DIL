@@ -440,19 +440,18 @@ sul server, e quindi i costi operativi.
 
 \subsubsection{Backend}
 
-Il backend è gestito da un server sviluppato utilizzando Flask. Il
-server in questione mette a disposizione un'API REST per permettere la
+Il backend è composto da un modulo python sviluppato attraverso l'utilizzo di Flask,
+mette a disposizione un'API REST per permettere la
 comunicazione con la componente di core business. Viene
-allestito un server accessibile con protocollo https (richiesto dai
+allestito un server accessibile con protocollo https (requisito imposto dai
 browser moderni per richiedere i permessi necessari al fine di accedere
 a periferiche quali la webcam) il quale si occupa di fornire al browser
 dell'utente il codice del client per poi procedere nello scambio di
 informazioni come descritto nel paragrafo dedicato al frontend. Quando
 un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
-funzione di core business, i risultati vengono raffinati per essere
-interpretati in modo corretto dal client, dopodichè questi ultimi
-vengono inviati al client, che si occuperà di comunicare all'utente
-eventuali risultati.
+funzione di core business, i risultati vengono poi raffinati per essere
+interpretati in modo corretto dal client, che li otterra subito dopo
+per poi preoccuparsi di comunicare all'utente eventuali riscontri positivi.
 
 \subsubsection{Core Business}
 
