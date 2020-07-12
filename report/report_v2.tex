@@ -102,7 +102,7 @@ riconoscere e le carateristiche testuali da ricercare.
 
 \section{Architettura del Sistema}
 
-In prima analisi, si sono andati a definire quelli che sono i requisiti
+In fase di revisione dei requisiti, si sono andati a definire quelli che sono i requisiti
 funzionali del nostro applicativo tramite l'utilizzo del diagramma di
 caso d'uso.
 
@@ -111,12 +111,14 @@ riconoscimento}
 
 Tale diagramma necessario nella prima fase di progettazione ha messo sul
 tavolo quella che è a grandi linee la logica applicativa del nostro
-sistema, si noti la ripartizione e la differenziazioni di tre principali
+sistema per quanto riguarda il funzionamento "effettua riconoscimento", si noti la ripartizione e la differenziazione di quattro principali
 casi d'uso, ovvero il riconoscimento sul quale si interfaccia
-direttamente il nostro attore principale, Il caso d'uso riconoscimento
-implementerà il caso d'uso riconosci documento, che definisce la semantica di
+direttamente il nostro attore principale, dove quest'ultimo si posiziona davanti alla telecamera con in mano un documento. Il caso d'uso riconoscimento
+implementerà il caso d'uso riconosci documento, che definisce la collocazione di
 utilizzo di una possibile funzionalità di object detection, quest'utlimo
 includera poi il caso d'uso effettua ocr.
+Infine il quarto caso d'uso visualizza documenti, con il quale l'attore principale si interfaccerà direttamente e tramite il quale sarà in grado di
+visualizzare i documenti riconosciuti fino a quel momento.
 
 \begin{figure}[H]
     \caption{Diagramma di Caso d'Uso}
@@ -161,9 +163,9 @@ qualsiasi macchina.
 
 Data la complessita computazionale delle operazioni messe a disposizione
 dalle librerie \mrcnn\ e pytesseract, si è optato per effettuare il
-processing di singoli frame intercorsi da quanti temporali vairabili a
+processing di singoli frame intercorsi da quanti temporali variabili a
 seconda del precedente riconoscimento, e non di uno stream video
-continuo, questo perchè non sarebbe garantita una fluidita
+continuo, questo perchè non sarebbe garantita una fluidità
 nell'erogazione del servizio su gran parte parte delle macchine server
 sulle quali questa web app puo essere esposta.
 
@@ -188,7 +190,7 @@ backbone.
 Avendo deciso che la bussiness logic del nostro sistema si basa su una rete
 neurale per la computer vision implementata tramite la libreria \mrcnn, cioè una
 rete neurale molto complessa sulla quale facciamo transfer learning, ovvero
-alleniamo solamente gli strati piu estrerni per adattare i pesi e la struttura
+alleniamo solamente gli strati più estrerni per adattare i pesi e la struttura
 della stessa al riconoscimento di un certo numero di classi definibili da noi
 sviluppatori e in ultima istanza dall'utente utilizzatore, ci siamo appoggiati
 al servizio colab di google per il training della rete tramite la computazione
@@ -206,21 +208,23 @@ fine report.
 
 \subsubsection{Dataset}
 
+--> riscrivere %TODO
+
 Si descrive ora la configurazione del dataset da noi utilizzato, è necessario
-seguirne la struttra per possibili ampliamenti e per l'aggiunta di classi
-di riconoscimento. Non è necessario essere consistenti rispetto
-alle classi da inferire nella nomenclatura delle sottodirectory di
-training e validating, la semantica di codice farà riferimento, per
-identificare immagini e le loro annotazioni, solamente al contenuto
-del file \texttt{via\_regions.json} presente in ogni directory
-contenente immagini (training e validating), mentre le directory più ad alto livello (testing,
-training e validating) sono logicamente differenti per la semantica del
-nostro applicativo, ad esempio tutte le immagini identificate dal file \texttt{via\_regions.json}
-presenti in una qualsiasi sottodirectory saranno utilizzate nella fase
-di training, ed annotate facendo riferimento al file stesso a
-prescindere dalla sottodirectory di apparteneza (patente o tesserino).\\
-E' comunque buona pratica rendere leggibile il dataset mantenendo una
-struttura il piu descrittiva possibile, come nel nostro esempio.
+seguirne la struttra per possibili ampliamenti e per l'aggiunta di classi di
+riconoscimento. Non è necessario essere consistenti rispetto alle classi da
+inferire nella nomenclatura delle sottodirectory di training e validating, la
+semantica di codice farà riferimento, per identificare immagini e le loro
+annotazioni, solamente al contenuto del file \texttt{via\_regions.json}
+presente in ogni directory contenente immagini (training e validating), mentre
+le directory più ad alto livello (testing, training e validating) sono
+logicamente differenti per la semantica del nostro applicativo, ad esempio
+tutte le immagini identificate dal file \texttt{via\_regions.json} presenti in
+una qualsiasi sottodirectory della directory training saranno utilizzate
+nell'omonima fase, ed annotate facendo riferimento al file stesso a prescindere
+dalla sottodirectory di apparteneza (patente o tesserino).\\ E' comunque buona
+pratica rendere leggibile il dataset mantenendo una struttura il più
+descrittiva possibile, come nel nostro esempio.
 
 \dirtree{%
     .1 /.
@@ -260,7 +264,7 @@ Di seguito è riportato il contenuto di un file
 \subsection{Architettura di massima}
 
 Abbiamo optato per lo sviluppo di una soluzione che sfrutta tecnologie
-web, quindi si andra a descrivere la progettazione di una web application, Il nostro
+web, quindi si andrà a descrivere la progettazione di una web application, Il nostro
 applicativo si suddividerà in tre macro parti:
 
 \begin{itemize}
@@ -268,7 +272,7 @@ applicativo si suddividerà in tre macro parti:
         compatibili, js html CSS
     \item la parte backend, sviluppata in python tramite la libreria
         flask per l'erogazione di servizi web
-    \item la parte di core bussness, ovvero il core dell'applicativo,
+    \item la parte di core business, ovvero il core dell'applicativo,
         sviluppata in python per l'utilizzo di ocr e object
         detection
 \end{itemize}
@@ -280,8 +284,8 @@ sistema.
 
 \subsubsection{Diagramma di classe completo}
 
-Si descrivono le classi presenti nella logica del nostro applicativo,
-per lo sviluppo del frontend e del backend non è stata necessaria la
+Si descrivono le classi presenti nella logica del nostro applicativo.
+Per lo sviluppo del frontend e del backend non è stata necessaria la
 concettualizzazione di alcuna classe, causa approccio imperativo delle
 tecnologie utilizzate.
 
@@ -306,7 +310,7 @@ modulo di core business durante il suo ciclo di vita  nel nostro
 applicativo.
 Vengono individuati quattro stati nel quale l'oggetto durante la sua presenza
 in memoria puo trovarsi.\\
-Lo stato Create che indica che il nostro oggeto contiene un modello di
+Lo stato Create che indica che il nostro oggetto contiene un modello di
 \mrcnn\ ma non ha ancora i pesi caricati e quindi non puo effettuare
 alcuna inferenza.
 Lo stato ReadyForInference, indica che il modello contenuto ha i pesi
@@ -319,8 +323,8 @@ Una volta disponibili i risultati dell'inferenza se non sono state trovate
 delle regioni di interesse che rappresentano documenti nell'immagine
 allora si ritorna nello stato di ReadyForInstance, nel caso contrario
 passerà nello stato di OCR Operations nel quale il nostro oggetto
-tramite funzioni esposte da pytesseract effettuera ocr sulle roi, finite
-tali operazioni ritoternera nello stato di ReadyForInference.
+tramite funzioni esposte da pytesseract effettuerà ocr sulle roi, finite
+tali operazioni ritoternerà nello stato di ReadyForInference.
 
 \begin{figure}[H]
     \caption{Diagramma di Stato}
@@ -362,14 +366,14 @@ associato.
 \subsubsection{Diagramma di attività per l'attività di cattura e processing di un
 frame}
 
-Il diagramma di classe in tal caso è stato sfruttato in fase di
-progettazione e lo sviluppo dell'algoritmo per il processing di un
-frame ricevuto dall'frontend, in tale sezione si è astratta la logica di
-backend e core business con un unica componente di responsabilita.
-Il diagramma come già detto esplicita il funzionamento dell'algoritmo di
-recognize passando per loading di un frame tramite mezzo di
-comunicazione  con il frontend e poi descrive la semantica dell'utilizzo
-delle librerie di ocr (pytesseract) computer vision (\mrcnn).
+Il diagramma di attività in tal caso è stato sfruttato in fase di progettazione
+per lo sviluppo dell'algoritmo che si occupa di effettuare il processing di un
+frame ricevuto dal frontend, in tale sezione si è astratta la logica di backend
+e core business con un unica componente di responsabilita. Il diagramma come
+già detto esplicita il funzionamento dell'algoritmo di recognize passando per
+loading di un frame tramite mezzo di comunicazione  con il frontend e poi
+descrive la semantica dell'utilizzo delle librerie di ocr (pytesseract) e
+computer vision (\mrcnn).
 
 \begin{figure}[p]
     \caption{Diagramma di Attività}
@@ -450,7 +454,7 @@ dell'utente il codice del client per poi procedere nello scambio di
 informazioni come descritto nel paragrafo dedicato al frontend. Quando
 un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
 funzione di core business, i risultati vengono poi raffinati per essere
-interpretati in modo corretto dal client, che li otterra subito dopo
+interpretati in modo corretto dal client, che li otterrà subito dopo
 per poi preoccuparsi di comunicare all'utente eventuali riscontri positivi.
 
 \subsubsection{Core Business}
@@ -522,14 +526,16 @@ maniera totalmente trasparente per l'utilizzatore.
 
 \section{Test}
 
+--> riscrivere %TODO
+
 Si è deciso di effettuare test funzionali rispetto al metodo recognize
 della classe detectron.\\
 Per la generazione dei casi di test si è utilizzato l'approccio della
 divisione in classi di equivalenza, andando ad effettuare un caso di
 test rappresentativo per ogni classe definita dall'input e l'output del nostro
 metodo.\\
-Andiamo a definire le classi di equivalenza per noi significative,
-Avremo un numero di classi valide per ogni tipologia di documento,
+Andiamo a definire le classi di equivalenza per noi significative.
+Avremo un numero di classi valide per ogni tipologia di documento
 riconoscibile dal sistema, e quindi definiremo un numero di casi di
 test equivalenti ognuno rappresentato da un immagine contenente tale
 documento, una classe valida che prende in input un
