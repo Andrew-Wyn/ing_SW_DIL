@@ -114,7 +114,7 @@ tavolo quella che è a grandi linee la logica applicativa del nostro
 sistema, si noti la ripartizione e la differenziazioni di tre principali
 casi d'uso, ovvero il riconoscimento sul quale si interfaccia
 direttamente il nostro attore principale, Il caso d'uso riconoscimento
-implementerà il caso d'uso processa frame, che definisce la semantica di
+implementerà il caso d'uso riconosci documento, che definisce la semantica di
 utilizzo di una possibile funzionalità di object detection, quest'utlimo
 includera poi il caso d'uso effettua ocr.
 
@@ -185,22 +185,20 @@ backbone.
 
 \subsection{Training}
 
-Essendo il nostro corebusiness basato su una rete neurale per la
-computer vision implementata tramite la libreria \mrcnn, una rete
-neurale molto complessa sulla quale facciamo transfer learning, ovvero
-alleniamo solamente gli strati piu estrerni per adattare i pesi e la
-struttura della stessa al riconoscimento di un certo numero di classi
-definibili da noi sviluppatori e in ultima istanza dall'utente
-utilizzatore, ci siamo appoggiati al servizio colab di google per il
-training della rete tramite la computazione limitata ma estremamente
-potente messa a dispozione da tale servizio.\\
-Per rendere ripetibile tutto ciò abbiamo reso disponibile il dataset da
-noi utilizzato e il file jupiter (tecnologia su cui si basa colab), cosi
-da poter ripetere la fase di training facendo l'opportuno tuning sui
-parametri e cosi da poter anche aggiungere nuove classi di oggetti e
-nuove istanze per il training. Infine si rimanda al link
-dell'applicativo web necessario alla creazione di annotazioni per le
-immagini utilizzate come istanze di training.
+Avendo deciso che la bussiness logic del nostro sistema si basa su una rete
+neurale per la computer vision implementata tramite la libreria \mrcnn, cioè una
+rete neurale molto complessa sulla quale facciamo transfer learning, ovvero
+alleniamo solamente gli strati piu estrerni per adattare i pesi e la struttura
+della stessa al riconoscimento di un certo numero di classi definibili da noi
+sviluppatori e in ultima istanza dall'utente utilizzatore, ci siamo appoggiati
+al servizio colab di google per il training della rete tramite la computazione
+limitata ma estremamente potente messa a dispozione da tale servizio.\\ Per
+rendere ripetibile tutto ciò abbiamo reso disponibile il dataset da noi
+utilizzato e il file jupiter (tecnologia su cui si basa colab), così da poter
+ripetere la fase di training facendo l'opportuno tuning sui parametri e da
+poter anche aggiungere nuove classi di oggetti e nuove istanze per il training.
+Infine si rimanda al link dell'applicativo web necessario alla creazione di
+annotazioni per le immagini utilizzate come istanze di training.
 \url{http://www.robots.ox.ac.uk/~vgg/software/via/}
 
 Per un riscontro pratico si faccia riferimento al notebook Jupyter a
@@ -284,11 +282,11 @@ sistema.
 
 Si descrivono le classi presenti nella logica del nostro applicativo,
 per lo sviluppo del frontend e del backend non è stata necessaria la
-concettualizzazione di alcuna classe, causa approccio funzionale delle
+concettualizzazione di alcuna classe, causa approccio imperativo delle
 tecnologie utilizzate.
 
 In tale diagramma si utilizza la rappresentazione della divisione in
-packaging, possiamo notare il package mrcnn, descritto con un livello di dettaglio
+packaging, possiamo notare il package mrcnn, rappresentato con un livello di dettaglio
 necessario per la descrizione dell'utilizzo che ne fa il nostro
 applicativo, le quali classi saranno ereditate ed utilizzate in quanto
 tali dalla logica del nostro modulo di core business, vedere package
@@ -365,15 +363,13 @@ associato.
 frame}
 
 Il diagramma di classe in tal caso è stato sfruttato in fase di
-progettazione per lo sviluppo dell'algoritmo per il processing di un
+progettazione e lo sviluppo dell'algoritmo per il processing di un
 frame ricevuto dall'frontend, in tale sezione si è astratta la logica di
 backend e core business con un unica componente di responsabilita.
 Il diagramma come già detto esplicita il funzionamento dell'algoritmo di
 recognize passando per loading di un frame tramite mezzo di
 comunicazione  con il frontend e poi descrive la semantica dell'utilizzo
-dell'utilizzo delle librerie di ocr (pytesseract) che ritorna gli
-ocr-box e computer vision (\mrcnn) che ritorna le roi associate al frame
-caricato.
+delle librerie di ocr (pytesseract) computer vision (\mrcnn).
 
 \begin{figure}[p]
     \caption{Diagramma di Attività}
