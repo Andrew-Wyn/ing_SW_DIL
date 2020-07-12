@@ -103,20 +103,29 @@ riconoscere e le carateristiche testuali da ricercare.
 
 \section{Architettura del Sistema}
 
+In prima analisi, si sono andati a definire quelli che sono i requisiti
+funzionali del nostro applicativo tramite l'utilizzo del diagramma di
+caso d'uso.
+
+\subsection{Diagramma di caso d'uso per il funzionamento di
+riconoscimento}
+
+Tale diagramma necessario nella prima fase di progettazione ha messo sul
+tavolo quella che è a grandi linee la logica applicativa del nostro
+sistema, si noti la ripartizione e la differenziazioni di tre principali
+casi d'uso, ovvero il riconoscimento sul quale si interfaccia
+direttamente il nostro attore principale, Il caso d'uso riconoscimento
+implementerà il caso d'uso processa frame, che definisce la semantica di
+utilizzo di una possibile funzionalità di object detection, quest'utlimo
+includera poi il caso d'uso effettua ocr.
+
+\begin{figure}[H]
+    \caption{Diagramma di Caso d'Uso}
+    \centering
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
+\end{figure}
+
 \subsection{Scelte architetturali}
-
-Abbiamo optato per lo sviluppo di una soluzione web, Il nostro
-applicativo si suddivide in tre macro parti:
-
-\begin{itemize}
-    \item la parte frontend, sviluppata tramite tecnologie browser
-        compatibili, js html CSS
-    \item la parte backend, sviluppata in python tramite la libreria
-        flask per l'erogazione di servizi web
-    \item la parte di core bussness, ovvero il core dell'applicativo,
-        sviluppata in python per l'utilizzo di ocr e object
-        detection
-\end{itemize}
 
 Nella progettazione architetturale di tale applicativo, si è optato per
 l'utilizzo di librerie testate e rappresentanti lo stato dell'arte,
@@ -249,33 +258,25 @@ Di seguito è riportato il contenuto di un file
 
 \inputminted{json}{via_regions.json}
 
-\subsection{Diagrammi UML}
+\subsection{Architettura di massima}
+
+Abbiamo optato per lo sviluppo di una soluzione web, Il nostro
+applicativo si suddivide in tre macro parti:
+
+\begin{itemize}
+    \item la parte frontend, sviluppata tramite tecnologie browser
+        compatibili, js html CSS
+    \item la parte backend, sviluppata in python tramite la libreria
+        flask per l'erogazione di servizi web
+    \item la parte di core bussness, ovvero il core dell'applicativo,
+        sviluppata in python per l'utilizzo di ocr e object
+        detection
+\end{itemize}
 
 Nel seguito si andranno a descrivere i diagrammi uml utilizzati in fase
 di progettazione e analisi architetturale nello sviluppo del nostro
 sistema.
 
-\subsubsection{Diagramma di caso d'uso per il funzionamento di
-riconoscimento}
-
-Si descrive il diagramma di caso d'uso per il caso d'uso di
-riconoscimento, tale diagramma necessario nella prima fase di
-progettazione ha messo sul tavolo quella che è a grandi linee la logica
-applicativa del nostro sistema, si noti la ripartizione e la
-differenziazioni di quattro principali casi d'uso, ovvero il
-riconoscimento sul quale si interfaccia direttamente il nostro attore
-principale, che estende il caso d'uso connection error in quanto gia
-stabilito che l'implementazione di tale applicativo sara una webapp.
-Il caso d'uso implementerà il caso d'uso riconosci frame, che
-rappresenta le funzionalita di object detection,
-quest'utlimo includera poi il caso d'uso effettua ocr che si rappresenta
-la componente per effettuare ocr.
-
-\begin{figure}[H]
-    \caption{Diagramma di Caso d'Uso}
-    \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
-\end{figure}
 
 \subsubsection{Diagramma di classe completo}
 
@@ -297,14 +298,13 @@ documentCNN, e dal modulo di training, vedere modulo training.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_class.pdf}
 \end{figure}
 
---> aggiungere descrizione diagramma di classe
 
 \subsubsection{Diagramma di stato per l'oggetto Detectron}
 
 Si descrive il diagramma di stato dell'oggetto Detectron proprio del
 modulo di core business durante il suo ciclo di vita  nel nostro
 applicativo.
-Vengono individuati 4 stati nel quale l'oggetto durante la sua presenza
+Vengono individuati quattro stati nel quale l'oggetto durante la sua presenza
 in memoria puo trovarsi.\\
 Lo stato Create che indica che il nostro oggeto contiene un modello di
 \mrcnn\ ma non ha ancora i pesi caricati e quindi non puo effettuare
@@ -381,7 +381,9 @@ caricato.
 
 \pagebreak
 
-\subsection{Frontend}
+\subsection{Architettura Implementativa}
+
+\subsubsection{Frontend}
 
 Il frontend è realizzato tramite la coniugazione delle tre principali
 tecnologie web: HTML, CSS e JavaScript.
@@ -438,7 +440,7 @@ Questo avrebbe alleggerito tanto il carico sulla rete (a beneficio degli
 utenti con una connessione meno stabile) quanto il carico computazionale
 sul server, e quindi i costi operativi.
 
-\subsection{Backend}
+\subsubsection{Backend}
 
 Il backend è gestito da un server sviluppato utilizzando Flask. Il
 server in questione mette a disposizione un'API REST per permettere la
@@ -454,7 +456,7 @@ interpretati in modo corretto dal client, dopodichè questi ultimi
 vengono inviati al client, che si occuperà di comunicare all'utente
 eventuali risultati.
 
-\subsection{Core Business}
+\subsubsection{Core Business}
 
 Il parte di core business è implementata in un modulo Python. Le
 funzionalità di riconoscimento sono rese disponibili tramite istanza di
