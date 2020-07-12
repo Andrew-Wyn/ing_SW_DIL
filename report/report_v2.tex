@@ -24,10 +24,9 @@
 \maketitle
 
 \begin{abstract}
-    Si descrive l'implementazione di una libreria basata su \mrcnn\ e
-    tesseract per il riconoscimento interattivo di documenti
-    identificativi e tessere.
-    --> modificare %TODO
+    Si descrive l'implementazione di un applicativo, che permette il
+    riconoscimento in tempo reale di un set di tipologie di documenti a
+    priori definite.
 \end{abstract}
 
 \section{Obbiettivi}
@@ -209,17 +208,19 @@ fine report.
 
 \subsubsection{Dataset}
 
-% TODO: sbrogliare
-Si descrive ora la struttura del dataset da noi generato, è necessario
-seguirne la struttra per possibili ampliamenti e per aggiunta di classi
-di riconoscimento. Non è invece necessario essere consistenti rispetto
+Si descrive ora la configurazione del dataset da noi utilizzato, è necessario
+seguirne la struttra per possibili ampliamenti e per l'aggiunta di classi
+di riconoscimento. Non è necessario essere consistenti rispetto
 alle classi da inferire nella nomenclatura delle sottodirectory di
 training e validating, la semantica di codice farà riferimento, per
-rifersirsi alle immagini e alle loro annotazioni, solamente al contenuto
+identificare immagini e le loro annotazioni, solamente al contenuto
 del file \texttt{via\_regions.json} presente in ogni directory
-contenente immagini, mentre le directory più ad alto livello (testing,
+contenente immagini (training e validating), mentre le directory più ad alto livello (testing,
 training e validating) sono logicamente differenti per la semantica del
-nostro esempio.\\
+nostro applicativo, ad esempio tutte le immagini identificate dal file \texttt{via\_regions.json}
+presenti in una qualsiasi sottodirectory saranno utilizzate nella fase
+di training, ed annotate facendo riferimento al file stesso a
+prescindere dalla sottodirectory di apparteneza (patente o tesserino).\\
 E' comunque buona pratica rendere leggibile il dataset mantenendo una
 struttura il piu descrittiva possibile, come nel nostro esempio.
 
@@ -260,8 +261,9 @@ Di seguito è riportato il contenuto di un file
 
 \subsection{Architettura di massima}
 
-Abbiamo optato per lo sviluppo di una soluzione web, Il nostro
-applicativo si suddivide in tre macro parti:
+Abbiamo optato per lo sviluppo di una soluzione che sfrutta tecnologie
+web, quindi si andra a descrivere la progettazione di una web application, Il nostro
+applicativo si suddividerà in tre macro parti:
 
 \begin{itemize}
     \item la parte frontend, sviluppata tramite tecnologie browser
