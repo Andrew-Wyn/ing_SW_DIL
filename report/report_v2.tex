@@ -569,19 +569,33 @@ funzionamento.\\
 Di seguito si riportano i casi di test e i rispettivi output rispetto ai
 quali il test viene ritenuto valido o meno.
 
-\begin{figure}[H]
-    \caption{Caso di test TESSERINO}
-    \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_tesserino.jpg}
+\begin{figure}[!htb]
+   \begin{minipage}{0.48\textwidth}
+     \centering
+     \includegraphics[width=.7\linewidth]{test_tesserino.jpg}
+     \caption{Caso di Test TESSERINO}\label{Fig:}
+   \end{minipage}\hfill
+   \begin{minipage}{0.48\textwidth}
+     \centering
+     \includegraphics[width=.7\linewidth]{test_tesserino_cutting.jpg}
+     \caption{Document Cutted}\label{Fig:}
+   \end{minipage}
 \end{figure}
 
 Output:
 \inputminted{python}{test_tesserino.py}
 
-\begin{figure}[H]
-    \caption{Caso di test PATENTE}
-    \centering
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_patente.jpg}
+\begin{figure}[!htb]
+   \begin{minipage}{0.48\textwidth}
+     \centering
+     \includegraphics[width=.7\linewidth]{test_patente.jpg}
+     \caption{Caso di Test PATENTE}\label{Fig:}
+   \end{minipage}\hfill
+   \begin{minipage}{0.48\textwidth}
+     \centering
+     \includegraphics[width=.7\linewidth]{test_patente_cutting.jpg}
+     \caption{Document Cutted}\label{Fig:}
+   \end{minipage}
 \end{figure}
 
 Output:
@@ -595,7 +609,6 @@ Output:
 
 Output:
 \inputminted{python}{test_background.py}
---> foto e output
 
 \pagebreak
 

@@ -28,6 +28,9 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = model.recognize(image)
+
+        # TODO salvare in immagine esterna il cutting per report 
+
         del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
         expected = [
             {
@@ -52,6 +55,9 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = model.recognize(image)
+
+        # TODO salvare in immagine esterna il cutting per il cutting
+
         del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
         expected = [
             {
