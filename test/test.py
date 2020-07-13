@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import unittest
 import sys
 import json
@@ -18,7 +19,6 @@ config["weights"] = f"{scriptdir}/../src/{config['weights']}"
 model = Detectron(config["weights"], config["classes"])
 
 class TestSet(unittest.TestCase):
-
     def test_tesserino(self):
         """
         test tesserino recognition
@@ -28,18 +28,19 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = model.recognize(image)
-
         del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
+        expected = [
+            {
+                "type": "Tesserino",
+                "attributes": {
+                    "Nome": ["Luca","Moroni"],
+                    "Matricola": ["311279"]
+                },
+                "valid": True,
+                "primaryKey": ["311279"]
+            }
+        ]
 
-        expected = [{
-                    "type": "Tesserino",
-                    "attributes": {
-                                    "Nome": ["Luca","Moroni"],
-                                    "Matricola": ["311279"]
-                                    },
-                    "valid": True,
-                    "primaryKey": ["311279"]
-                    }]
         self.assertEqual(result, expected)
 
     def test_patente(self):
@@ -51,17 +52,17 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = model.recognize(image)
-
         del result[0]["snapshot"] # non possiamo testare la validita di bytes rappresentante lo snapshot
-
-        expected = [{
-                    "type": "Patente",
-                    "attributes": {
-                                    "Numero": ["TR5160189G"]
-                                  },
-                    "valid": True,
-                    "primaryKey": ["TR5160189G"]
-                    }]
+        expected = [
+            {
+                "type": "Patente",
+                "attributes": {
+                    "Numero": ["TR5160189G"]
+                },
+                "valid": True,
+                "primaryKey": ["TR5160189G"]
+            }
+        ]
         self.assertEqual(result, expected)
 
     def test_bg(self):
@@ -73,9 +74,7 @@ class TestSet(unittest.TestCase):
             image = f.read()
 
         result = model.recognize(image)
-
         expected = []
-
         self.assertEqual(result, expected)
 
     def test_bytestream(self):
