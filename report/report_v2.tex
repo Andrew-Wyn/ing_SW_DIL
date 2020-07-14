@@ -24,32 +24,30 @@
 \maketitle
 
 \begin{abstract}
-    Si descrive l'implementazione di un applicativo, che permette il
-    riconoscimento in tempo reale di un set di tipologie di documenti a
-    priori definite.
+    Si descrive l'implementazione di un applicativo che permette il
+    riconoscimento in tempo reale di un set estensibile di tipologie di
+    documenti.
 \end{abstract}
 
 \section{Obbiettivi}
 
 Implementare un applicativo che tramite l'utilizzo di un dispositivo di
-input video sia in grado di riconoscere e di identificare un insieme di
-documenti a priori definiti e di riconoscere delle porzioni di testo
-presenti nel documento precedentemente identificato.
+input video sia in grado di riconoscere e di identificare un insieme
+estensibile di documenti e di riconoscere delle porzioni di testo
+presenti in essi.
 
 \section{Analisi dei Requisiti}
-
-\subsection{Analisi Requisiti}
+\subsection{Analisi dei Requisiti Utente}
 
 \begin{itemize}
     \item Ottenere un elenco dei documenti visibili all'interno di
-        un'immagine e le componenti testuali specifiche in esso
+        un'immagine e le componenti testuali specifiche in essi
         riconoscibili.
     \item Avere la possibilità di definire la natura dei documenti
         oggetto del riconoscimento e delle informazioni testuali
         rilevanti in essi contenute.
-    \item Mettere a disposizione un interfaccia grafica semplice e
-        minimale per l'acquisizione di video e immagini
-
+    \item Mettere a disposizione un'interfaccia grafica semplice e
+        minimale per l'acquisizione di video e immagini.
     \item Implementare delle tecnologie per l'object detection e ocr
         allo stato dell'arte per erogare in modo efficiente il servizio
         richiesto dal committente.
@@ -58,61 +56,53 @@ presenti nel documento precedentemente identificato.
 \subsection{Glossario e Dominio applicativo}
 
 Il prodotto risponde all'esigenza di individuare la tipologia ed
-eseguire il parsing dei prinicipali dati testuali esposti in vari
-documenti di riconoscimento, tramite webcam.
-I domini applicativi di tale sistema e le problematiche ad essi connesse
-sono sono quelli dell'ambito della computer vision e dell'OCR.
-L'utente finale avrà a disposizione un'interfaccia grafica attraverso la
-quale, in modo intuitivo ed efficiente, potrà avere accesso al servizio
-erogato.
+eseguire il riconoscimento dei prinicipali dati testuali esposti in vari
+documenti identificativi tramite webcam. I domini applicativi di tale
+sistema e le problematiche ad essi connesse sono sono quelli dell'ambito
+della computer vision e dell'OCR. L'utente finale avrà a disposizione
+un'interfaccia grafica attraverso la quale, in modo intuitivo ed
+efficiente, potrà avere accesso al servizio erogato.
 
 \begin{description}
     \item[Computer Vision] Insieme di metodologie algoritmiche e
         matematiche che hanno come obiettivo quello di acquisire delle
         conoscenze ad alto livello partendo da immagini o video. Nel
-        nostro caso capire se e dove nelle immagini passate
-        all'applicativo è presente un documento del tipo prestabilito.
+        nostro caso capire se e dove nello stream video esaminato
+        dall'applicativo è presente un documento di uno dei tipi
+        prestabiliti.
     \item[Object Detection] Tecnologia relativa all'ambito della
-        computer vision, che propone una soluzione algoritmica per il
-        riconoscimento di istanze riguardanti oggetti di classi
+        computer vision che propone una soluzione algoritmica per il
+        riconoscimento di istanze di oggetti appartenenti a classi
         predefinite in immagini digitali e video.
     \item[OCR] Optical Character Recognition, metodologie software per
-        il riconoscimento di caratteri contenuti in un documento e
-        trascrizione di tali simboli in caratteri equivalenti.
+        il riconoscimento di caratteri contenuti in immagini traduzione
+        di tali simboli in caratteri digitali equivalenti.
 \end{description}
 
 \subsection{Modellazione Concettuale del Sistema}
 
-Il compito di interagire con l'utente finale sarà a carico di una
-componente di interfaccia grafica ``frontend'' che si occuperà
-dell'accesso alla videocamera e mostrerà uno storico dei documenti
-riconosciuti e in corso di riconoscimento in tempo reale, mentre
-delegherà il compito di applicare e interpretare i risultati delle
-primitive di riconoscimento e OCR a una componente ``buisiness logic''
-configurabile dal committente potendo scegliere il tipo di documenti da
-riconoscere e le carateristiche testuali da ricercare.
+La logica del sistema sarà divisa in due macro blocchi: il compito di
+interagire con l'utente finale sarà a carico di una componente di
+interfaccia grafica ``frontend'' che si occuperà di interfacciarsi alla
+videocamera e di mostrare uno storico dei documenti riconosciuti e in
+corso di riconoscimento in tempo reale; il compito di applicare e
+interpretare i risultati delle primitive di riconoscimento e OCR sarà
+invece delegato a una componente ``business logic''. Il committente
+avrà la possibilità di configurare questa componente scegliendo il tipo
+di documenti da riconoscere e le caratteristiche testuali da ricercare.
 
 \section{Architettura del Sistema}
 
-In fase di revisione dei requisiti, si sono andati a definire quelli che sono i requisiti
-funzionali del nostro applicativo tramite l'utilizzo del diagramma di
-caso d'uso.
+In fase di revisione dei requisiti, siamo andati a definire con maggior
+precisione i requisiti funzionali del nostro applicativo tramite
+l'utilizzo del diagramma di caso d'uso.
 
-\subsection{Diagramma di caso d'uso per il funzionamento di
-riconoscimento}
+\subsection{Diagramma per il caso d'uso di riconoscimento}
 
---> RIVEDERE %TODO
-
-Tale diagramma necessario nella prima fase di progettazione ha messo sul
-tavolo quella che è a grandi linee la logica applicativa del nostro
-sistema per quanto riguarda il funzionamento "effettua riconoscimento", si noti la ripartizione e la differenziazione di quattro principali
-casi d'uso, ovvero il riconoscimento sul quale si interfaccia
-direttamente il nostro attore principale, dove quest'ultimo si posiziona davanti alla telecamera con in mano un documento. Il caso d'uso riconoscimento
-implementerà il caso d'uso riconosci documento, che definisce la collocazione di
-utilizzo di una possibile funzionalità di object detection, quest'utlimo
-includera poi il caso d'uso effettua ocr.
-Infine il quarto caso d'uso visualizza documenti, con il quale l'attore principale si interfaccerà direttamente e tramite il quale sarà in grado di
-visualizzare i documenti riconosciuti fino a quel momento.
+Tale diagramma, necessario nella prima fase di progettazione, ha
+permesso di definire quella che è a grandi linee la logica di
+funzionamento del nostro
+sistema per quanto riguarda il caso d'uso ``riconoscimento'',
 
 \begin{figure}[H]
     \caption{Diagramma di Caso d'Uso}
@@ -578,7 +568,7 @@ quali il test viene ritenuto valido o meno.
 \end{figure}
 
 Output:
-\inputminted{python}{test\_tesserino.py}
+\inputminted{python}{test_tesserino.py}
 
 \begin{figure}[!htb]
    \begin{minipage}{0.48\textwidth}
@@ -594,7 +584,7 @@ Output:
 \end{figure}
 
 Output:
-\inputminted{python}{test\_patente.py}
+\inputminted{python}{test_patente.py}
 
 \begin{figure}[H]
     \caption{Caso di test BG}
@@ -603,7 +593,7 @@ Output:
 \end{figure}
 
 Output:
-\inputminted{python}{test\_background.py}
+\inputminted{python}{test_background.py}
 
 \pagebreak
 
