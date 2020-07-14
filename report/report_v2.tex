@@ -37,7 +37,8 @@ documenti a priori definiti e di riconoscere delle porzioni di testo
 presenti nel documento precedentemente identificato.
 
 \section{Analisi dei Requisiti}
-\subsection{Analisi Requisiti Utente}
+
+\subsection{Analisi Requisiti}
 
 \begin{itemize}
     \item Ottenere un elenco dei documenti visibili all'interno di
@@ -48,19 +49,10 @@ presenti nel documento precedentemente identificato.
         rilevanti in essi contenute.
     \item Mettere a disposizione un interfaccia grafica semplice e
         minimale per l'acquisizione di video e immagini
-\end{itemize}
 
-\subsection{Analisi Requisiti Sistema}
-
-\begin{itemize}
     \item Implementare delle tecnologie per l'object detection e ocr
         allo stato dell'arte per erogare in modo efficiente il servizio
         richiesto dal committente.
-    \item Fornire strumenti che mettono a disposizione la possibilita di
-        rendere scalabile il numero e la tipologia di documenti
-        riconoscibili dall'applicativo
-    \item L'applicativo finale \textit{dovrebbe} essere portabile e non
-        strettamente dipendente da una particolare architettura
 \end{itemize}
 
 \subsection{Glossario e Dominio applicativo}
@@ -109,6 +101,8 @@ caso d'uso.
 \subsection{Diagramma di caso d'uso per il funzionamento di
 riconoscimento}
 
+--> RIVEDERE %TODO
+
 Tale diagramma necessario nella prima fase di progettazione ha messo sul
 tavolo quella che è a grandi linee la logica applicativa del nostro
 sistema per quanto riguarda il funzionamento "effettua riconoscimento", si noti la ripartizione e la differenziazione di quattro principali
@@ -128,54 +122,57 @@ visualizzare i documenti riconosciuti fino a quel momento.
 
 \subsection{Scelte architetturali}
 
+--> rivedere %TODO
+
 Nella progettazione architetturale di tale applicativo, si è optato per
 l'utilizzo di librerie testate e rappresentanti lo stato dell'arte,
-inerentemente all'ambito applicativo sopracitato.\\
+inerentemente all'ambito applicativo sopracitato.
 Per quanto riguarda l'object detection, abbiamo selezionato la libreria
-\textbf{\mrcnn} una libreria che oltre a effettuare object detection mette a
+\textbf{\mrcnn}, una libreria che oltre a effettuare object detection mette a
 disposizione anche segmentazione di immagini, una feature aggiuntiva che
-oltre a ritornare un rettangolo contenente un oggetto di una determinata
+oltre a ritornare un rettangolo contenente l'oggetto di una determinata
 classe nell'immagine ne ritorna anche la regione di pixel che lo
-rappresenta, tale feature comunque non è utilizzata nel nostro sistema,
-ma è tornata utile in fase di training in quanto possiamo allenare la
-nostra rete direttamente tramite i segmenti di documenti, evitando la
+rappresenta, tale feature comunque non è utilizzata nel nostro sistema.
+E' tornata utile in fase di training in quanto possiamo allenare la
+nostra rete direttamente tramite i segmenti di documenti, evitando ad esempio la
 presenza dei polpastrelli che in alcuni casi possono portare la nostra
-rete fuori rotta.\\
-Invece per effettuare l'ocr abbiamo optato per la libreria tesseract,
+rete fuori rotta.
+Per effettuare l'ocr abbiamo optato per la libreria tesseract,
 resa disponibile in python tramite una libreria wrapper chiamata
 pytesseract.
 
 Le librerie appena citate hanno portato alla necessità di importarne
-altre tra cui, tensorflow$=$1.x, flask$=$2.0.8 sulle quali si basa
-\mrcnn, opencv per la gestione e la codifica di immagini.
+altre tra cui, tensorflow$=$1.x, keras$=$2.0.8 sulle quali si basa
+\mrcnn ed opencv per la gestione e la codifica di immagini.
 
-Per la gestione delle dipendenze in fase di sviluppo abbiamo utilizzato
-due strumenti propri dell'ambiente python, pipenv che mette a
-disposizione un ambiente virtuale contenente determinate librerie in
+Per la gestione delle dipendenze abbiamo utilizzato
+due strumenti propri dell'ambiente python. pipenv che mette a
+disposizione un ambiente virtuale contenente librerie in
 modo asettico rispetto a quelle di sistema e che rende ripetibile su
 altre macchine la configurazione da noi utilizzata con semplici
 passaggi. pyenv che invece mette a disposizione delle versioni di python
-proprie in modo da non andare a modificare quella di sistema nel caso
-sia necessaria un versione non corrispondente con quella di sistema, ad
-esempio tensorflow$=$1.x è utilizzabile solamente con versioni di
-python$\leq$3.7.x con pyenv tale requisito puo essere soddisfatto su
+da poter utilizzare al posto di quella di sistema quando per determinate 
+libreria quando una versione di python specifica.
+Ad esempio tensorflow$=$1.x è utilizzabile solamente con versioni di
+python$\leq$3.7.x con pyenv tale requisito può essere soddisfatto su
 qualsiasi macchina.
 
-Data la complessita computazionale delle operazioni messe a disposizione
-dalle librerie \mrcnn\ e pytesseract, si è optato per effettuare il
-processing di singoli frame intercorsi da quanti temporali variabili a
-seconda del precedente riconoscimento, e non di uno stream video
+--> rivedere %TODO
+
+Data la complessità computazionale delle operazioni messe a disposizione
+dalle librerie \mrcnn\ e tesseract, si è optato per effettuare il
+processing di singoli frame, e non di uno stream video
 continuo, questo perchè non sarebbe garantita una fluidità
 nell'erogazione del servizio su gran parte parte delle macchine server
-sulle quali questa web app puo essere esposta.
+sulle quali questa web app può essere esposta.
 
 \subsection{Accenni strutturali di \mrcnn}
 
-Il funzionamento della rete \mrcnn\ consiste in due fasi. Nella prima
-fase la rete ritorna delle regioni le quali dovrebbero rappresentare
-oggetti presenti sull'immagine di input. La seconda fase invece,
+La logica della rete \mrcnn\ consiste nell'esecuzione di due fasi. Nella prima
+fase la rete ritorna delle regioni che dovrebbero rappresentare
+oggetti presenti all'interno dell'immagine di input. La seconda fase invece
 effettua un inferenza sulla classe dell'oggetto, rifinisce il bounding
-box e genera la maschera, a livello di pixel, basandosi sull'output
+box e genera la maschera a livello di pixel basandosi sull'output
 della prima fase. Entrambe le fasi sono connesse alla struttura
 backbone.
 
@@ -187,30 +184,33 @@ backbone.
 
 \subsection{Training}
 
+--> rivedere %TODO
+
 Avendo deciso che la bussiness logic del nostro sistema si basa su una rete
-neurale per la computer vision implementata tramite la libreria \mrcnn, cioè una
+neurale per la computer vision implementata dalla libreria \mrcnn, cioè una
 rete neurale molto complessa sulla quale facciamo transfer learning, ovvero
 alleniamo solamente gli strati più estrerni per adattare i pesi e la struttura
 della stessa al riconoscimento di un certo numero di classi definibili da noi
 sviluppatori e in ultima istanza dall'utente utilizzatore, ci siamo appoggiati
-al servizio colab di google per il training della rete tramite la computazione
-limitata ma estremamente potente messa a dispozione da tale servizio.\\ Per
+al servizio colab di Google per il training della rete tramite la computazione
+estremamente potente messa a dispozione da tale servizio.\\ Per
 rendere ripetibile tutto ciò abbiamo reso disponibile il dataset da noi
-utilizzato e il file jupiter (tecnologia su cui si basa colab), così da poter
+utilizzato e il file jupyter (tecnologia su cui si basa colab), così da poter
 ripetere la fase di training facendo l'opportuno tuning sui parametri e da
 poter anche aggiungere nuove classi di oggetti e nuove istanze per il training.
+Per un riscontro pratico si faccia riferimento al notebook Jupyter a
+fine report.\\
 Infine si rimanda al link dell'applicativo web necessario alla creazione di
 annotazioni per le immagini utilizzate come istanze di training.
 \url{http://www.robots.ox.ac.uk/~vgg/software/via/}
 
-Per un riscontro pratico si faccia riferimento al notebook Jupyter a
-fine report.
-
 \subsubsection{Dataset}
 
-Si descrive ora la configurazione del dataset da noi utilizzato. è necessario
+Si descrive ora la configurazione del dataset da noi utilizzato. E' necessario
 seguirne in buona parte la struttra per possibili ampliamenti e per l'aggiunta di classi di
 riconoscimento.
+
+--> rivedere %TODO
 
 --- versione A ---
 
@@ -240,8 +240,7 @@ rappresentati dalle immagini presenti in queste ultime; le immagini presenti in 
 file \texttt{via\_regions.json}, univoco per ogni directory e necessario per effettuare la
 classificazione di oggetti presenti nelle immagini, il quale ne contiente le annotazioni relative (maschere e classi).
 Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla
-rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale
-rispetto ad una struttura di pesi precedentemente calcolata.
+rete in fase di training/validating, è necessaria per effettuare dei test rispetto ad una struttura di pesi precedentemente calcolata.
 
 \dirtree{%
     .1 /.
