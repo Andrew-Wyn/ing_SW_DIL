@@ -208,41 +208,39 @@ fine report.
 
 \subsubsection{Dataset}
 
---> riscrivere %TODO
-
 Si descrive ora la configurazione del dataset da noi utilizzato. è necessario
 seguirne in buona parte la struttra per possibili ampliamenti e per l'aggiunta di classi di
-riconoscimento. 
+riconoscimento.
 
 --- versione A ---
 
-La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root. 
-le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi. 
-Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory 
-ma in delle sottodirectory (tesserino_uni, patente) i quali nomi sono descrittivi dei documenti 
-rappresentati dalle immagini presenti in queste ultime; il partizionamento tramite tali sottodirectory non è comunque 
-necessario in quanto la rete in fase di cariacamento del dataset training e/o validating per effettuare la 
+La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root.
+le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi.
+Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory
+ma in delle sottodirectory (tesserino\_uni, patente) i quali nomi sono descrittivi dei documenti
+rappresentati dalle immagini presenti in queste ultime; il partizionamento tramite tali sottodirectory non è comunque
+necessario in quanto la rete in fase di cariacamento del dataset training e/o validating per effettuare la/
 classificazione di oggetti presenti nelle immagini farà riferimento solamente al file \texttt{via\_regions.json}
-locato nella medesima posizione dell'immagine da caricare, figlia diretta o indiretta di training o validating a 
-seconda della fase, il quale file ne contiente le annotazioni relative (maschere e classi). 
+locato nella medesima posizione dell'immagine da caricare, figlia diretta o indiretta di training o validating a
+seconda della fase, il quale file ne contiente le annotazioni relative (maschere e classi).
 Il file \texttt{via\_regions.json} deve essere unico nella directory di appartenenza.
 E' comunque buona pratica rendere leggibile il dataset mantenendo una struttura il più
 descrittiva possibile, come nel nostro esempio, definendo delle directory per ogni tipo di documento.
-Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla 
-rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale, 
+Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla
+rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale,
 rispetto ad una struttura di pesi precedentemente calcolata.
 
 --- versione B ---
 
-La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root. 
-le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi. 
-Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory 
-ma in delle sottodirectory (tesserino_uni, patente) i quali nomi sono descrittivi dei documenti 
-rappresentati dalle immagini presenti in queste ultime; le immagini presenti in tali locazioni saranno identificate da un 
-file \texttt{via\_regions.json}, univoco per ogni directory e necessario per effettuare la 
-classificazione di oggetti presenti nelle immagini, il quale ne contiente le annotazioni relative (maschere e classi). 
-Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla 
-rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale 
+La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root.
+le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi.
+Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory
+ma in delle sottodirectory (tesserino\_uni, patente) i quali nomi sono descrittivi dei documenti
+rappresentati dalle immagini presenti in queste ultime; le immagini presenti in tali locazioni saranno identificate da un
+file \texttt{via\_regions.json}, univoco per ogni directory e necessario per effettuare la
+classificazione di oggetti presenti nelle immagini, il quale ne contiente le annotazioni relative (maschere e classi).
+Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla
+rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale
 rispetto ad una struttura di pesi precedentemente calcolata.
 
 \dirtree{%
@@ -545,20 +543,18 @@ maniera totalmente trasparente per l'utilizzatore.
 
 \section{Test}
 
---> riscrivere %TODO
-
 Si è deciso di effettuare test funzionali rispetto al metodo recognize
 della classe detectron.\\
 Per la generazione dei casi di test si è utilizzato l'approccio della
 divisione in classi di equivalenza, andando ad effettuare un caso di
 test rappresentativo per ogni classe definita dall'input e l'output del nostro
 metodo.\\
-Definiamo le classi di equivalenza per noi significative, seguendo la classificazione rispetto 
+Definiamo le classi di equivalenza per noi significative, seguendo la classificazione rispetto
 alla tipologia di valori di input.
 Avremo un numero di classi valide per ogni tipologia di documento
 riconoscibile dal sistema, e quindi definiremo un numero di casi di
 test equivalenti ognuno rappresentato da un immagine contenente tale
-documento, una classe valida contenente le immagini che non contiengono alcun documento conosciuto dal sistema, 
+documento, una classe valida contenente le immagini che non contiengono alcun documento conosciuto dal sistema,
 testata per l'appunto da un immagine priva di documenti
 e una classe non valida che contiene tutti gli input che non rappresentano
 immagini, quest'ultima testata tramite una stringa di byte casuale.\\
@@ -583,7 +579,7 @@ quali il test viene ritenuto valido o meno.
 \end{figure}
 
 Output:
-\inputminted{python}{test_tesserino.py}
+\inputminted{python}{test\_tesserino.py}
 
 \begin{figure}[!htb]
    \begin{minipage}{0.48\textwidth}
@@ -599,7 +595,7 @@ Output:
 \end{figure}
 
 Output:
-\inputminted{python}{test_patente.py}
+\inputminted{python}{test\_patente.py}
 
 \begin{figure}[H]
     \caption{Caso di test BG}
@@ -608,11 +604,11 @@ Output:
 \end{figure}
 
 Output:
-\inputminted{python}{test_background.py}
+\inputminted{python}{test\_background.py}
 
 \pagebreak
 
-\section{Training Notebook} % TODO spostare dove appropriato
+\section{Training Notebook}
 
 \setminted[python]{
     linenos,
