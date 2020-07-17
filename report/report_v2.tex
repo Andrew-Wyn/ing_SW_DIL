@@ -215,35 +215,43 @@ problema.\\
 La cartella testing contiene invece foto da utilizzare quando si volesse
 eseguire un test manuale dei risultati del training in Colab.
 
-\dirtree{%
-    .1 /.
-    .2 testing.
-    .3 test0.jpg.
-    .3 ....
-    .3 testN.jpg.
-    .2 validating.
-    .3 tesserino.
-    .4 tesserino1.jpg.
-    .4 ....
-    .4 tesserinoN.jpg.
-    .4 via\_regions.json.
-    .3 patente.
-    .4 patente1.jpg.
-    .4 ....
-    .4 patenteN.jpg.
-    .4 via\_regions.json.
-    .2 training.
-    .3 tesserino.
-    .4 tesserino1.jpg.
-    .4 ....
-    .4 tesserinoN.jpg.
-    .4 via\_regions.json.
-    .3 patente.
-    .4 patente1.jpg.
-    .4 ....
-    .4 patenteN.jpg.
-    .4 via\_regions.json.
-}
+\begin{figure}[H]
+    \caption{Esempio di struttura di una cartella dataset}
+    \centering
+    \fbox{%
+        \begin{minipage}{\textwidth}
+            \dirtree{%
+                .1 dataset.
+                    .2 training.
+                        .3 tesserino.
+                            .4 tesserino1.jpg.
+                            .4 ....
+                            .4 tesserinoN.jpg.
+                            .4 via\_regions.json.
+                        .3 patente.
+                            .4 patente1.jpg.
+                            .4 ....
+                            .4 patenteN.jpg.
+                            .4 via\_regions.json.
+                    .2 validating.
+                        .3 tesserino.
+                            .4 tesserino1.jpg.
+                            .4 ....
+                            .4 tesserinoN.jpg.
+                            .4 via\_regions.json.
+                        .3 patente.
+                            .4 patente1.jpg.
+                            .4 ....
+                            .4 patenteN.jpg.
+                            .4 via\_regions.json.
+                    .2 testing.
+                        .3 test0.jpg.
+                        .3 ....
+                        .3 testN.jpg.
+            }
+        \end{minipage}
+    }
+\end{figure}
 
 Di seguito è riportato il contenuto di un file
 \texttt{via\_regions.json} a titolo esemplificativo.
