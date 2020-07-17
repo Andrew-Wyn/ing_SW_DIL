@@ -112,59 +112,52 @@ sistema per quanto riguarda il caso d'uso ``riconoscimento''.
 
 \subsection{Scelte architetturali}
 
---> rivedere %TODO
+Nella progettazione architetturale dell'applicativo, abbiamo utilizzato
+librerie testate e rappresentanti lo stato dell'arte del dominio
+applicativo. Per quanto riguarda l'object detection, abbiamo selezionato
+\textbf{\mrcnn}, una libreria che oltre a effettuare object detection
+per mezzo di una rete neurale convoluzionale, mette a disposizione anche
+la segmentazione di immagini, una feature aggiuntiva che oltre a
+ritornare i rettangoli contenenti gli oggetti di una determinata classe
+presenti nell'immagine ne ritorna anche la regione di pixel che li
+rappresenta. Tale feature comunque non è utilizzata nel nostro sistema.
+Questa funzione è tornata utile in fase di training (v.sez.TODO) in
+quanto ha reso possibile specificare l'area dei documenti contenuti
+nelle immagini di training in maniera molto precisa, evitando ad esempio
+la l'inclusione dei polpastrelli che in alcuni casi possono influenzare
+il comportamento della rete. Per effettuare l'OCR abbiamo optato per la
+libreria tesseract, resa disponibile in python tramite il modulo wrapper
+pytesseract. Le librerie appena citate hanno determinato la necessità di
+importarne altre tra cui tensorflow$=$1.x e keras$=$2.0.8 sulle quali si
+basa \mrcnn, ed OpenCV2 per la gestione e la codifica delle immagini.
 
-Nella progettazione architetturale di tale applicativo, si è optato per
-l'utilizzo di librerie testate e rappresentanti lo stato dell'arte,
-inerentemente all'ambito applicativo sopracitato.
-Per quanto riguarda l'object detection, abbiamo selezionato la libreria
-\textbf{\mrcnn}, una libreria che oltre a effettuare object detection mette a
-disposizione anche segmentazione di immagini, una feature aggiuntiva che
-oltre a ritornare un rettangolo contenente l'oggetto di una determinata
-classe nell'immagine ne ritorna anche la regione di pixel che lo
-rappresenta, tale feature comunque non è utilizzata nel nostro sistema.
-E' tornata utile in fase di training in quanto possiamo allenare la
-nostra rete direttamente tramite i segmenti di documenti, evitando ad esempio la
-presenza dei polpastrelli che in alcuni casi possono portare la nostra
-rete fuori rotta.
-Per effettuare l'ocr abbiamo optato per la libreria tesseract,
-resa disponibile in python tramite una libreria wrapper chiamata
-pytesseract.
+Per la gestione delle dipendenze abbiamo utilizzato due strumenti propri
+dell'ambiente python. \texttt{pipenv} crea un ambiente virtuale
+contenente le specifiche versioni delle librerie utilizzate separando
+queste rispetto a quelle di sistema e rende ripetibile su altre macchine
+l'esatta configurazione da noi utilizzata. \texttt{pyenv} permette di
+utilizzare una versione specifica dell'interprete python diversa da
+quella fornita dal sistema. Nel nostro caso, tensorflow$=$1.x è
+compatibile solamente con versioni di python$\leq$3.7.x con
+\texttt{pyenv} tale requisito può essere soddisfatto su qualsiasi
+macchina.
 
-Le librerie appena citate hanno portato alla necessità di importarne
-altre tra cui, tensorflow$=$1.x, keras$=$2.0.8 sulle quali si basa
-\mrcnn ed opencv per la gestione e la codifica di immagini.
-
-Per la gestione delle dipendenze abbiamo utilizzato
-due strumenti propri dell'ambiente python. pipenv che mette a
-disposizione un ambiente virtuale contenente librerie in
-modo asettico rispetto a quelle di sistema e che rende ripetibile su
-altre macchine la configurazione da noi utilizzata con semplici
-passaggi. pyenv che invece mette a disposizione delle versioni di python
-da poter utilizzare al posto di quella di sistema quando per determinate 
-libreria quando una versione di python specifica.
-Ad esempio tensorflow$=$1.x è utilizzabile solamente con versioni di
-python$\leq$3.7.x con pyenv tale requisito può essere soddisfatto su
-qualsiasi macchina.
-
---> rivedere %TODO
-
-Data la complessità computazionale delle operazioni messe a disposizione
-dalle librerie \mrcnn\ e tesseract, si è optato per effettuare il
-processing di singoli frame, e non di uno stream video
-continuo, questo perchè non sarebbe garantita una fluidità
-nell'erogazione del servizio su gran parte parte delle macchine server
-sulle quali questa web app può essere esposta.
+Data la complessità computazionale delle operazioni impiegate
+dalle librerie \mrcnn\ e tesseract, si è optato per effettuare
+l'elaborazione di singoli frame, e non di uno stream video
+continuo, questo perché non sarebbe garantita una buona fluidità
+del servizio a meno di impiegare una macchina server estremamente
+performante, e quindi costosa.
 
 \subsection{Accenni strutturali di \mrcnn}
 
-La logica della rete \mrcnn\ consiste nell'esecuzione di due fasi. Nella prima
-fase la rete ritorna delle regioni che dovrebbero rappresentare
-oggetti presenti all'interno dell'immagine di input. La seconda fase invece
-effettua un inferenza sulla classe dell'oggetto, rifinisce il bounding
-box e genera la maschera a livello di pixel basandosi sull'output
-della prima fase. Entrambe le fasi sono connesse alla struttura
-backbone.
+La logica della rete \mrcnn\ consiste nell'esecuzione di due fasi. Nella
+prima fase la rete ritorna delle regioni che dovrebbero rappresentare
+oggetti presenti all'interno dell'immagine di input. La seconda fase
+invece effettua un inferenza sulle classe degli oggetti, rifinisce le
+bounding box (ROIs, regioni di interesse) e genera le maschere a livello
+di pixel basandosi sull'output della prima fase. Entrambe le fasi sono
+connesse alla struttura backbone.
 
 \begin{figure}[H]
     \caption{Struttura \mrcnn}
@@ -174,63 +167,54 @@ backbone.
 
 \subsection{Training}
 
---> rivedere %TODO
+Per training di una rete neurale intendiamo la sequenza di operazioni
+eseguite al fine di modulare i valori interni (pesi) che influenzano il
+comportamento dei nodi della rete, con il fine ultimo di abbassare il
+tasso di errore associato alle previsioni della rete.
 
-Avendo deciso che la bussiness logic del nostro sistema si basa su una rete
-neurale per la computer vision implementata dalla libreria \mrcnn, cioè una
-rete neurale molto complessa sulla quale facciamo transfer learning, ovvero
-alleniamo solamente gli strati più estrerni per adattare i pesi e la struttura
-della stessa al riconoscimento di un certo numero di classi definibili da noi
-sviluppatori e in ultima istanza dall'utente utilizzatore, ci siamo appoggiati
-al servizio colab di Google per il training della rete tramite la computazione
-estremamente potente messa a dispozione da tale servizio.\\ Per
-rendere ripetibile tutto ciò abbiamo reso disponibile il dataset da noi
-utilizzato e il file jupyter (tecnologia su cui si basa colab), così da poter
-ripetere la fase di training facendo l'opportuno tuning sui parametri e da
-poter anche aggiungere nuove classi di oggetti e nuove istanze per il training.
-Per un riscontro pratico si faccia riferimento al notebook Jupyter a
-fine report.\\
-Infine si rimanda al link dell'applicativo web necessario alla creazione di
-annotazioni per le immagini utilizzate come istanze di training.
+La bussiness logic del nostro sistema si basa su una rete neurale per la
+computer vision implementata dalla libreria \mrcnn\ sulla quale facciamo
+\textit{transfer learning}, ovvero eseguiamo training solo sugli strati
+più esterni adattando la struttura della rete al riconoscimento di un
+certo numero di classi di oggetti definibili dall'amministratore,
+prendendo i pesi per gli strati inferiori dal modello MS COCO.
+
+Per eseguire il training della rete ci siamo appoggiati alla potenza
+computazionale fornita gratuitamente da Google tramite il servizio Colab
+Per rendere ripetibile queste operazioni sulla base delle future
+necessità del committente abbiamo reso disponibile il dataset e il
+notebook Jupyter da noi utilizzati, così da avere una base su cui
+espandere per il tuning dei parametri di training, l'aggiunta di nuove
+classi di documenti e l'ampliamento del dataset. Una copia per la
+consultazione del notebook in questione è visionabile alla fine di
+questo documento.
+
+Si rimanda infine al link dell'applicativo web utilizzato per la
+creazione di annotazioni per le immagini incluse nel dataset:
+
 \url{http://www.robots.ox.ac.uk/~vgg/software/via/}
 
 \subsubsection{Dataset}
 
-Si descrive ora la configurazione del dataset da noi utilizzato. E' necessario
-seguirne in buona parte la struttra per possibili ampliamenti e per l'aggiunta di classi di
-riconoscimento.
+Segue la struttura del dataset da noi utilizzato.
 
---> rivedere %TODO
-
---- versione A ---
-
-La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root.
-le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi.
-Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory
-ma in delle sottodirectory (tesserino\_uni, patente) i quali nomi sono descrittivi dei documenti
-rappresentati dalle immagini presenti in queste ultime; il partizionamento tramite tali sottodirectory non è comunque
-necessario in quanto la rete in fase di cariacamento del dataset training e/o validating per effettuare la/
-classificazione di oggetti presenti nelle immagini farà riferimento solamente al file \texttt{via\_regions.json}
-locato nella medesima posizione dell'immagine da caricare, figlia diretta o indiretta di training o validating a
-seconda della fase, il quale file ne contiente le annotazioni relative (maschere e classi).
-Il file \texttt{via\_regions.json} deve essere unico nella directory di appartenenza.
-E' comunque buona pratica rendere leggibile il dataset mantenendo una struttura il più
-descrittiva possibile, come nel nostro esempio, definendo delle directory per ogni tipo di documento.
-Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla
-rete in fase di training/validating, è necessaria per effettuare dei test in tempo reale,
-rispetto ad una struttura di pesi precedentemente calcolata.
-
---- versione B ---
-
-La struttura del nostro dataset consiste nella presenza di tre directory figlie dirette della root.
-le directory training e validating contengono le immagini utilizzate dalla rete nelle omonime fasi.
-Si noti che nella nostra struttura non abbiamo immagini che sono situate direttamente in tali directory
-ma in delle sottodirectory (tesserino\_uni, patente) i quali nomi sono descrittivi dei documenti
-rappresentati dalle immagini presenti in queste ultime; le immagini presenti in tali locazioni saranno identificate da un
-file \texttt{via\_regions.json}, univoco per ogni directory e necessario per effettuare la
-classificazione di oggetti presenti nelle immagini, il quale ne contiente le annotazioni relative (maschere e classi).
-Infine la directory testing figlia diretta di root, la quale contiene una lista di immagini che non saranno accessibili dalla
-rete in fase di training/validating, è necessaria per effettuare dei test rispetto ad una struttura di pesi precedentemente calcolata.
+La cartella del dataset contiene tre sottocartelle: training, validating
+e testing. Le cartelle training e validating sono a loro volta divise in
+ulteriori sottocartelle, una per ogni tipo di documento. Queste
+sottocartelle contengono le foto da utilizzare nelle rispettive fasi di
+allenamento della rete neurale e i metadati ad esse associati contenuti
+in un unico file \texttt{via\_regions.json} presente in ogni
+sottocartella. I nomi di queste sottocartelle non sono particolarmente
+importanti, ma si consiglia di sceglierli in modo che siano descrittivi
+delle immagini in esse contenute. In effetti, non è strettamente
+necessario creare una nuova sottocartella ogni volta che si vuole
+aggiungere una nuova classe di documento: anche la classe del documento
+contenuto in una foto è infatti specificata nel file
+\texttt{via\_regions.json}; la stessa sottocartella può quindi contenere
+immagini che si riferiscono a classi di documenti diverse senza alcun
+problema.\\
+La cartella testing contiene invece foto da utilizzare quando si volesse
+eseguire un test manuale dei risultati del training in Colab.
 
 \dirtree{%
     .1 /.
@@ -267,26 +251,25 @@ Di seguito è riportato il contenuto di un file
 
 \inputminted{json}{via_regions.json}
 
-\subsection{Architettura di massima}
+\subsection{Architettura di implementazione}
 
-Abbiamo optato per lo sviluppo di una soluzione che sfrutta tecnologie
-web, quindi si andrà a descrivere la progettazione di una web application, Il nostro
-applicativo si suddividerà in tre macro parti:
+Abbiamo optato per lo sviluppo di una soluzione basata su tecnologie
+web, si andrà quindi a descrivere la progettazione di una web
+application. Il nostro sistema sarà dunque suddiviso in tre macro-parti:
 
 \begin{itemize}
-    \item la parte frontend, sviluppata tramite tecnologie browser
-        compatibili, js html CSS
-    \item la parte backend, sviluppata in python tramite la libreria
-        flask per l'erogazione di servizi web
-    \item la parte di core business, ovvero il core dell'applicativo,
-        sviluppata in python per l'utilizzo di ocr e object
-        detection
+    \item Il \textit{frontend}, implementato tramite tecnologie web
+        JavaScript, HTML e CSS
+    \item Il \textit{backend}, implementato in python tramite il
+        framework flask per l'erogazione di servizi web.
+    \item Il modulo di \textit{core business}, ovvero il nucleo
+        dell'applicativo, sviluppato in python, per i compiti di object
+        detection e di OCR
 \end{itemize}
 
-Nel seguito si andranno a descrivere i diagrammi uml utilizzati in fase
+Nel seguito si andranno a descrivere i diagrammi UML utilizzati in fase
 di progettazione e analisi architetturale nello sviluppo del nostro
 sistema.
-
 
 \subsubsection{Diagramma di classe completo}
 
@@ -295,12 +278,13 @@ Per lo sviluppo del frontend e del backend non è stata necessaria la
 concettualizzazione di alcuna classe, causa approccio imperativo delle
 tecnologie utilizzate.
 
-In tale diagramma si utilizza la rappresentazione della divisione in
-packaging, possiamo notare il package mrcnn, rappresentato con un livello di dettaglio
-necessario per la descrizione dell'utilizzo che ne fa il nostro
-applicativo, le quali classi saranno ereditate ed utilizzate in quanto
-tali dalla logica del nostro modulo di core business, vedere package
-documentCNN, e dal modulo di training, vedere modulo training.
+In tale diagramma possiamo evidenziare tre package: \texttt{mrcnn}
+rappresenta le classi della libreria \mrcnn, con cui i nostri moduli
+andranno a utilizzare, descritte con un livello di dettaglio
+semplificato e adeguato alle nostre esigenze. \texttt{training}
+rappresenta le classi utilizzate durante il training della rete (v.
+notebook Jupyter). \texttt{documentCNN} si riferisce al modulo di core
+business da noi sviluppato.
 
 \begin{figure}[H]
     \caption{Diagramma delle Classi}
@@ -308,35 +292,36 @@ documentCNN, e dal modulo di training, vedere modulo training.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_class.pdf}
 \end{figure}
 
-
 \subsubsection{Diagramma di stato per l'oggetto Detectron}
 
 Si descrive il diagramma di stato dell'oggetto Detectron proprio del
 modulo di core business durante il suo ciclo di vita  nel nostro
 applicativo.
-Vengono individuati quattro stati nel quale l'oggetto durante la sua presenza
-in memoria puo trovarsi.\\
-Lo stato Create che indica che il nostro oggetto contiene un modello di
-\mrcnn\ ma non ha ancora i pesi caricati e quindi non puo effettuare
-alcuna inferenza.
-Lo stato ReadyForInference, indica che il modello contenuto ha i pesi
-generati dalla fase di training caricati ed è pronto per effettuare
-inferenza.\\
-lo stato Recognizing, indica che il nostro oggetto Detectron ha
-processato l'immagine e sta aspettando il ritorno dell'inferenza tramite
-primitiva del modello della libreria \mrcnn.\\
-Una volta disponibili i risultati dell'inferenza se non sono state trovate
-delle regioni di interesse che rappresentano documenti nell'immagine
-allora si ritorna nello stato di ReadyForInstance, nel caso contrario
-passerà nello stato di OCR Operations nel quale il nostro oggetto
-tramite funzioni esposte da pytesseract effettuerà ocr sulle roi, finite
-tali operazioni ritoternerà nello stato di ReadyForInference.
+
+Vengono individuati quattro stati nel quale l'oggetto trovarsi: lo stato
+\textit{Created} che indica che il nostro oggetto contiene un modello di
+\mrcnn\ ma non ha ancora i pesi caricati e quindi non può effettuare
+alcuna inferenza, lo stato \textit{ReadyForInference}, indica che il
+modello contenuto ha i pesi generati dalla fase di training caricati ed
+è pronto per effettuare inferenza, lo stato \textit{Recognizing}, indica
+che il nostro oggetto Detectron ha decodificato l'immagine e sta
+aspettando il ritorno dell'inferenza dal modello della libreria \mrcnn.
+
+Una volta disponibili i risultati dell'inferenza, se non sono state
+trovate delle regioni di interesse che rappresentano documenti
+nell'immagine, allora si ritorna nello stato di
+\textit{ReadyForInference}; nel caso contrario passerà nello stato di
+\textit{OCR Operations} nel quale il nostro oggetto effettuerà OCR sulle
+ROIs tramite le funzioni esposte da pytesseract. Finite tali operazioni
+ritornerà nello stato di \textit{ReadyForInference}.
 
 \begin{figure}[H]
     \caption{Diagramma di Stato}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
 \end{figure}
+
+% TODO: continua da qui
 
 \subsubsection{diagramma di sequenza (e comunicazione) per il
 funzionamento di riconoscimento}
