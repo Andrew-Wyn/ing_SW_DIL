@@ -357,30 +357,24 @@ ritornerà nello stato di \textit{ReadyForInference}.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
 \end{figure}
 
-\subsubsection{diagramma di sequenza (e comunicazione) per il
-funzionamento di riconoscimento}
+\subsubsection{Diagrammi di sequenza e comunicazione per il caso d'uso ``riconoscimento''}
 
 Si descrive la logica del funzionamento del caso d'uso riconoscimento
-tramite i diagrammi di sequenza e comunicazione.
-Come rappresentato il nostro sistema mette in gioco l'utilizzo di varie
-componenti, il nostro attore principale si interfaccia con una
-componente di frontend, la quale entrerà in un loop nel quale dall'input
-video andrà a prelevare il frame corrente, passando tale frame alla
-compomente di backend, impementata nell'oggetto app, quest'ultimo che
-passera, dopo eventuali decodifiche, l'immagine all'oggetto di core
-business detectron, il quale tramite l'utilizzo di metodi e primitive
-proprie delle librerie \mrcnn\ e pytesseract crea un dizionario
-contenente per ogni documento una lista di stringhe rappresentanti il
-testo riconosciuto.
+tramite i diagrammi di sequenza e comunicazione. Come rappresentato il
+nostro sistema mette in gioco varie componenti: il nostro attore
+principale si interfaccia con una componente ``frontend'', che eseguirà
+un loop nel quale andrà a prelevare un frame dall'input video,
+inviandolo quindi alla componente ``backend'', implementata nell'oggetto
+\texttt{app}, che passerà l'immagine all'oggetto di core business di
+classe \texttt{Detectron}, il quale tramite l'utilizzo di metodi e
+primitive proprie delle librerie \mrcnn\ e pytesseract creerà un
+dizionario contenente per ogni documento i dati riconosciuti.
 
 \begin{figure}[H]
     \caption{Diagramma di Sequenza}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_seq.pdf}
 \end{figure}
-
-Di seguito è rappresentato il corrispettivo diagramma di comunicazione
-associato.
 
 \begin{figure}[H]
     \caption{Diagramma di Comunicazione}
@@ -397,7 +391,7 @@ la logica di backend e core business in un unica componente di
 responsabilità. Il diagramma, come già detto, esplicita il funzionamento
 dell'algoritmo di riconoscimento partendo dalla ricezione di un frame
 dal frontend attraverso la rete, e descrivendo la semantica
-dell'utilizzo delle librerie di ocr (pytesseract) e computer vision
+dell'utilizzo delle librerie di OCR (pytesseract) e computer vision
 (\mrcnn).
 
 \begin{figure}[H]
@@ -414,13 +408,13 @@ Il frontend è realizzato tramite la coniugazione delle tre principali
 tecnologie web: HTML, CSS e JavaScript.
 
 L'interfaccia è studiata in modo molto semplice e minimale: l'area
-dell'applicazione è limitata in larghezza per accomodare diverse
-dimensioni dello schermo. Il riquadro contenente lo stream video è
+dell'applicazione è limitata in larghezza per accomodare schermi di
+diverse dimensioni. Il riquadro contenente lo stream video è
 situato nell'angolo in alto a sinistra e occupa circa il 60\% in
-larghezza dell'area disponibile. Al disotto di esso è sito un container
+larghezza dell'area disponibile. Al di sotto di esso è sito un container
 della stessa dimensione che contiene le preview temporanee dei documenti
 in corso di rilevamento, e alla sua destra si ha una colonna contenente
-i documenti identificati con buona probabilità che riempie lo spazio
+i documenti identificati con buona probabilità, che riempie lo spazio
 restante.
 
 Il client preleva attraverso il browser un fotogramma dallo stream video
@@ -428,13 +422,13 @@ proveniente dalla webcam, ottenuto dopo esplicito consenso da parte
 dell'utente, e lo invia al server per l'elaborazione tramite una
 richiesta POST diretta a un endopint REST \texttt{/recognize}. Il body
 di questa richiesta è codificato in JSON e contiene i dati dell'immagine
-in compressione JPEG convertiti in stringa di testo in base64.
+in compressione JPEG convertiti in testo tramite base64.
 
-Una volta ricevuta la risposta del server, anch'essa codificata in JSON
+Una volta ricevuta la risposta del server, anch'essa codificata in JSON,
 il client parserà le informazioni ricevute e, se presenti, stamperà
 sullo schermo le porzioni di immagine contenenti i documenti appena
-identificati specificandone la tipologia in una sezione dedicata al di
-sotto del riquadro dello stream video, che mostrerà solo i dati relativi
+identificati, specificandone la tipologia in una sezione dedicata al di
+sotto del riquadro dello stream video che mostrerà solo i dati relativi
 all'ultima acquisizione.
 
 Quando un documento contiene tutti i dati necessari all'identificazione
@@ -442,43 +436,42 @@ questo viene inserito, assieme a tutti i dati raccolti, in un elenco
 presentato a destra del riquadro video. Questo elenco è permanente ma,
 quando un documento viene identificato per la seconda volta, la nuova
 versione andrà a sovrascrivere la precedente. Due versioni dello stesso
-documento sono identificate tramite il valore di un campo speciale su di
-esso presente specifico per ogni classe, detto primaryKey.
+documento sono individuate tramite il valore di un campo speciale,
+specifico per ogni classe di documento, chiamato \texttt{primaryKey}.
 
 Una volta stampate le informazioni rilevanti sullo schermo il client si
 occuperà di acquisire un nuovo fotogramma e di ripetere il ciclo.
 Ovviamente le prestazioni delle operazioni sopra descritte sono
-influenzate notevolmente dalla larghezza di banda di rete disponibile.
-La qualità e l'efficacia della rilevazione del testo sono inoltre
-fortemente dipendenti dalla qualità della webcam attraverso la quale il
-client acquisisce lo stream video.
+influenzate notevolmente dalla larghezza di banda della rete. La qualità
+e l'efficacia della rilevazione del testo sono inoltre fortemente
+dipendenti dalla qualità della webcam attraverso la quale il client
+acquisisce lo stream video.
 
 Un'idea che avremmo potuto mettere in pratica per migliorare le
 prestazioni e l'efficienza dell'intero sistema sarebbe stata quella di
 implementare lato client una semplice CNN molto più leggera rispetto a
 quella utilizzata dal server, con il compito di capire quali immagini in
 via di acquisizione avrebbero effettivamente potuto contenere dei
-documenti. In questo modo avremmo potuto evitare di inviare al server
-foto con un'altissima probabilità di non contenere documenti, ad esempio
-foto scattate prima o dopo che l'utente si fosse messo in posizione.
-Questo avrebbe alleggerito tanto il carico sulla rete (a beneficio degli
-utenti con una connessione meno stabile) quanto il carico computazionale
-sul server, e quindi i costi operativi.
+documenti. In questo modo avremmo evitato di inviare al server foto con
+una scarsa probabilità di contenere documenti, ad esempio foto scattate
+prima o dopo che l'utente si sia messo in posizione. Questo avrebbe
+alleggerito tanto il carico sulla rete (a beneficio degli utenti con una
+connessione meno stabile) quanto il carico computazionale sul server, e
+quindi i costi operativi.
 
 \subsubsection{Backend}
 
-Il backend è composto da un modulo python sviluppato attraverso l'utilizzo di Flask,
-mette a disposizione un'API REST per permettere la
-comunicazione con la componente di core business. Viene
-allestito un server accessibile con protocollo https (requisito imposto dai
-browser moderni per richiedere i permessi necessari al fine di accedere
-a periferiche quali la webcam) il quale si occupa di fornire al browser
-dell'utente il codice del client per poi procedere nello scambio di
-informazioni come descritto nel paragrafo dedicato al frontend. Quando
-un'immagine viene ricevuta, questa viene fatta elaborare dall'apposita
-funzione di core business, i risultati vengono poi raffinati per essere
-interpretati in modo corretto dal client, che li otterrà subito dopo
-per poi preoccuparsi di comunicare all'utente eventuali riscontri positivi.
+Il backend è composto da un modulo python sviluppato utilizzando il
+framework Flask, che mette a disposizione un'API REST per permettere la
+comunicazione con la componente di core business. Viene allestito un web
+server accessibile tramite protocollo HTTPS\footnote{requisito imposto
+dai browser moderni per concedere i permessi necessari al fine di
+accedere a periferiche quali la webcam} che si occupa di servire al
+browser dell'utente la pagina web contenente il client, per poi
+procedere nello scambio di informazioni tramite la API REST
+precedentemente descritta. Quando un'immagine viene ricevuta, questa
+viene elaborata mediante l'apposita funzione di core business e i
+risultati vengono poi convertiti in JSON per essere inviati al client.
 
 \subsubsection{Core Business}
 
@@ -546,27 +539,21 @@ maniera totalmente trasparente per l'utilizzatore.
 
 \section{Test}
 
-Si è deciso di effettuare test funzionali rispetto al metodo recognize
-della classe detectron.\\
-Per la generazione dei casi di test si è utilizzato l'approccio della
-divisione in classi di equivalenza, andando ad effettuare un caso di
-test rappresentativo per ogni classe definita dall'input e l'output del nostro
-metodo.\\
-Definiamo le classi di equivalenza per noi significative, seguendo la classificazione rispetto
-alla tipologia di valori di input.
-Avremo un numero di classi valide per ogni tipologia di documento
-riconoscibile dal sistema, e quindi definiremo un numero di casi di
-test equivalenti ognuno rappresentato da un immagine contenente tale
-documento, una classe valida contenente le immagini che non contiengono alcun documento conosciuto dal sistema,
-testata per l'appunto da un immagine priva di documenti
-e una classe non valida che contiene tutti gli input che non rappresentano
-immagini, quest'ultima testata tramite una stringa di byte casuale.\\
-In tal modo abbiamo coperto tutti i possibili input del nostro metodo
-andando ad esplicitare un test set valido per verificarne il
-funzionamento.\\
+Abbiamo deciso di effettuare test funzionali rispetto al metodo
+\texttt{recognize} della classe \texttt{Detectron}. Per la generazione
+dei casi di test si è utilizzato l'approccio della divisione in classi
+di equivalenza, andando a produrre un caso di test rappresentativo per
+ogni classe definita dall'input e l'output del nostro metodo. Definiamo
+le classi di equivalenza per noi significative, seguendo la
+classificazione rispetto alla tipologia dei valori di input. Queste
+saranno: una per ogni classe di documento accettabile, una per gli input
+che non contengono documenti, e una per gli input invalidi, ossia che
+non rappresentano immagini. Per ognuna di queste classi abbiamo
+preparato un test rappresentativo; in tal modo abbiamo coperto tutte le
+possibili tipologie di input del nostro metodo definendo un test set
+valido per verificarne il funzionamento.
 
-Di seguito si riportano i casi di test e i rispettivi output rispetto ai
-quali il test viene ritenuto valido o meno.
+Di seguito si riportano i casi di test e i rispettivi output attesi.
 
 % TODO vedi impaginazione
 
@@ -632,7 +619,7 @@ Output:
     framesep=2mm
 }
 
-Segue una copia commentata di un notebook jupyter che è stato utilizzato
+Segue una copia commentata di un notebook Jupyter che è stato utilizzato
 per eseguire il training del dataset di esempio in Google Colab. Per
 l'ultima versione dell'originale consultare la repo git.
 
