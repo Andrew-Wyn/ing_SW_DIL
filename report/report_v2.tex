@@ -335,8 +335,6 @@ ritornerà nello stato di \textit{ReadyForInference}.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_state.pdf}
 \end{figure}
 
-% TODO: continua da qui
-
 \subsubsection{diagramma di sequenza (e comunicazione) per il
 funzionamento di riconoscimento}
 
@@ -368,25 +366,23 @@ associato.
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_comm.pdf}
 \end{figure}
 
-\subsubsection{Diagramma di attività per l'attività di cattura e processing di un
-frame}
+\subsubsection{Diagramma di attività per la cattura e il processing di un frame}
 
-Il diagramma di attività in tal caso è stato sfruttato in fase di progettazione
-per lo sviluppo dell'algoritmo che si occupa di effettuare il processing di un
-frame ricevuto dal frontend, in tale sezione si è astratta la logica di backend
-e core business con un unica componente di responsabilita. Il diagramma come
-già detto esplicita il funzionamento dell'algoritmo di recognize passando per
-loading di un frame tramite mezzo di comunicazione  con il frontend e poi
-descrive la semantica dell'utilizzo delle librerie di ocr (pytesseract) e
-computer vision (\mrcnn).
+Questo diagramma di attività è stato sfruttato in fase di progettazione
+per lo sviluppo dell'algoritmo che si occupa di effettuare il processing
+di un frame ricevuto dal frontend; in tale diagramma si sono accorpate
+la logica di backend e core business in un unica componente di
+responsabilità. Il diagramma, come già detto, esplicita il funzionamento
+dell'algoritmo di riconoscimento partendo dalla ricezione di un frame
+dal frontend attraverso la rete, e descrivendo la semantica
+dell'utilizzo delle librerie di ocr (pytesseract) e computer vision
+(\mrcnn).
 
-\begin{figure}[p]
+\begin{figure}[H]
     \caption{Diagramma di Attività}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_activity.pdf}
 \end{figure}
-
-\pagebreak
 
 \subsection{Architettura Implementativa}
 
@@ -398,7 +394,7 @@ tecnologie web: HTML, CSS e JavaScript.
 L'interfaccia è studiata in modo molto semplice e minimale: l'area
 dell'applicazione è limitata in larghezza per accomodare diverse
 dimensioni dello schermo. Il riquadro contenente lo stream video è
-situato nell'angolo in alto a sinistra e occupa circa il 60% in
+situato nell'angolo in alto a sinistra e occupa circa il 60\% in
 larghezza dell'area disponibile. Al disotto di esso è sito un container
 della stessa dimensione che contiene le preview temporanee dei documenti
 in corso di rilevamento, e alla sua destra si ha una colonna contenente
