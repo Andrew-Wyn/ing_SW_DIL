@@ -11,15 +11,19 @@
 \setlength{\parindent}{2em}
 \setlength{\parskip}{1em}
 
-\setminted{encoding=utf-8,outencoding=utf-8}
+\setlength{\abovecaptionskip}{.8em plus .3em minus .3em}
+\setlength{\belowcaptionskip}{.8em plus .3em minus .3em}
+
+\setminted{encoding=utf-8,outencoding=utf-8,frame=lines,framesep=1em}
+\renewcommand{\listingscaption}{Listato}
 
 \newcommand{\mrcnn}{Mask-R\_CNN}
-
-\begin{document}
 
 \title{Riconoscimento Documenti}
 \author{Simone Cimarelli \and Vittorio Mignini \and Luca Moroni}
 \date{9 luglio 2020}
+
+\begin{document}
 
 \maketitle
 
@@ -120,13 +124,14 @@ per mezzo di una rete neurale convoluzionale, mette a disposizione anche
 la segmentazione di immagini, una feature aggiuntiva che oltre a
 ritornare i rettangoli contenenti gli oggetti di una determinata classe
 presenti nell'immagine ne ritorna anche la regione di pixel che li
-rappresenta. Tale feature comunque non è utilizzata nel nostro sistema.
-Questa funzione è tornata utile in fase di training (v.sez.TODO) in
-quanto ha reso possibile specificare l'area dei documenti contenuti
-nelle immagini di training in maniera molto precisa, evitando ad esempio
-la l'inclusione dei polpastrelli che in alcuni casi possono influenzare
-il comportamento della rete. Per effettuare l'OCR abbiamo optato per la
-libreria tesseract, resa disponibile in python tramite il modulo wrapper
+rappresenta. Tale feature non sarà utilizzata nel nostro sistema, ma si
+dimostra utile in fase di training
+(v.~§\ref{s:training}~\nameref{s:training}) in quanto rende possibile
+specificare l'area dei documenti contenuti nelle immagini di training in
+maniera molto precisa, evitando ad esempio la l'inclusione dei
+polpastrelli che in alcuni casi possono influenzare il comportamento
+della rete. Per effettuare l'OCR abbiamo optato per la libreria
+tesseract, resa disponibile in python tramite il modulo wrapper
 pytesseract. Le librerie appena citate hanno determinato la necessità di
 importarne altre tra cui tensorflow$=$1.x e keras$=$2.0.8 sulle quali si
 basa \mrcnn, ed OpenCV2 per la gestione e la codifica delle immagini.
@@ -149,9 +154,9 @@ continuo, questo perché non sarebbe garantita una buona fluidità
 del servizio a meno di impiegare una macchina server estremamente
 performante, e quindi costosa.
 
-\subsection{Accenni strutturali di \mrcnn}
+\subsection{Accenni strutturali su \mrcnn}
 
-La logica della rete \mrcnn\ consiste nell'esecuzione di due fasi. Nella
+La logica della rete \mrcnn\ prevede l'esecuzione di due fasi. Nella
 prima fase la rete ritorna delle regioni che dovrebbero rappresentare
 oggetti presenti all'interno dell'immagine di input. La seconda fase
 invece effettua un inferenza sulle classe degli oggetti, rifinisce le
@@ -160,12 +165,13 @@ di pixel basandosi sull'output della prima fase. Entrambe le fasi sono
 connesse alla struttura backbone.
 
 \begin{figure}[H]
-    \caption{Struttura \mrcnn}
+    \caption{Struttura di \mrcnn}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{mask_description.jpg}
 \end{figure}
 
 \subsection{Training}
+\label{s:training}
 
 Per training di una rete neurale intendiamo la sequenza di operazioni
 eseguite al fine di modulare i valori interni (pesi) che influenzano il
@@ -195,8 +201,6 @@ creazione di annotazioni per le immagini incluse nel dataset:\\
 
 \subsubsection{Dataset}
 
-Segue la struttura del dataset da noi utilizzato.
-
 La cartella del dataset contiene tre sottocartelle: training, validating
 e testing. Le cartelle training e validating sono a loro volta divise in
 ulteriori sottocartelle, una per ogni tipo di documento. Queste
@@ -211,9 +215,9 @@ aggiungere una nuova classe di documento: anche la classe del documento
 contenuto in una foto è infatti specificata nel file
 \texttt{via\_regions.json}; la stessa sottocartella può quindi contenere
 immagini che si riferiscono a classi di documenti diverse senza alcun
-problema.\\
-La cartella testing contiene invece foto da utilizzare quando si volesse
-eseguire un test manuale dei risultati del training in Colab.
+problema.\\ La cartella testing contiene invece foto da utilizzare
+quando si volesse eseguire un test manuale dei risultati del training in
+Colab.
 
 \begin{figure}[H]
     \caption{Esempio di struttura di una cartella dataset}
@@ -256,19 +260,22 @@ eseguire un test manuale dei risultati del training in Colab.
 Di seguito è riportato il contenuto di un file
 \texttt{via\_regions.json} a titolo esemplificativo.
 
-\inputminted{json}{via_regions.json}
+\begin{listing}[H]
+    \caption{Esempio di file \texttt{via\_regions.json}}
+    \inputminted{json}{via_regions.json}
+\end{listing}
 
 \subsection{Architettura di implementazione}
 
 Abbiamo optato per lo sviluppo di una soluzione basata su tecnologie
-web, si andrà quindi a descrivere la progettazione di una web
-application. Il nostro sistema sarà dunque suddiviso in tre macro-parti:
+web; andremo quindi a descrivere la progettazione di una web
+application. Il nostro sistema sarà suddiviso in tre macro-parti:
 
 \begin{itemize}
     \item Il \textit{frontend}, implementato tramite tecnologie web
         JavaScript, HTML e CSS
-    \item Il \textit{backend}, implementato in python tramite il
-        framework flask per l'erogazione di servizi web.
+    \item Il \textit{backend}, realizzato in python tramite il
+        framework flask per l'implementazione di servizi web.
     \item Il modulo di \textit{core business}, ovvero il nucleo
         dell'applicativo, sviluppato in python, per i compiti di object
         detection e di OCR
@@ -289,9 +296,9 @@ In tale diagramma possiamo evidenziare tre package: \texttt{mrcnn}
 rappresenta le classi della libreria \mrcnn, con cui i nostri moduli
 andranno a utilizzare, descritte con un livello di dettaglio
 semplificato e adeguato alle nostre esigenze. \texttt{training}
-rappresenta le classi utilizzate durante il training della rete (v.
-notebook Jupyter). \texttt{documentCNN} si riferisce al modulo di core
-business da noi sviluppato.
+rappresenta le classi utilizzate durante il training della rete
+(v.~§\ref{s:notebook}~\nameref{s:notebook}). \texttt{documentCNN} si
+riferisce al modulo di core business da noi sviluppato.
 
 \begin{figure}[H]
     \caption{Diagramma delle Classi}
@@ -457,7 +464,7 @@ per poi preoccuparsi di comunicare all'utente eventuali riscontri positivi.
 
 \subsubsection{Core Business}
 
-Il parte di core business è implementata in un modulo Python. Le
+Il parte di core business è implementata in un modulo python. Le
 funzionalità di riconoscimento sono rese disponibili tramite istanza di
 una classe \texttt{Detectron}, inizializzata tramite una struttura di
 configurazione definibile dall'utente in congiunzione con i pesi della
@@ -493,13 +500,10 @@ univoco del documento, quando presente.\\
 La funzione \texttt{recognize} ritorna in output una lista di questi
 dizionari.
 
-\pagebreak
-
-\subsubsection{Esempio di configurazione}
-
-\inputminted[frame=lines,framesep=1em]{python}{config.py}
-
-\pagebreak
+\begin{listing}[H]
+    \caption{Esempio di oggetto di configurazione}
+    \inputminted{python}{config.py}
+\end{listing}
 
 \section{Design Pattern}
 
@@ -546,6 +550,8 @@ funzionamento.\\
 Di seguito si riportano i casi di test e i rispettivi output rispetto ai
 quali il test viene ritenuto valido o meno.
 
+% TODO vedi impaginazione
+
 \begin{figure}[!htb]
    \begin{minipage}{0.48\textwidth}
      \centering
@@ -589,7 +595,8 @@ Output:
 
 \pagebreak
 
-\section{Training Notebook}
+\section{Notebook Jupyter}
+\label{s:notebook}
 
 \setminted[python]{
     linenos,
