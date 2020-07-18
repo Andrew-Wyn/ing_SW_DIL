@@ -71,7 +71,7 @@ presenti in essi.
         rilevanti in essi contenute.
     \item Mettere a disposizione un'interfaccia grafica semplice e
         minimale per l'acquisizione di video e immagini.
-    \item Implementare delle tecnologie per l'object detection e ocr
+    \item Implementare delle tecnologie per l'object detection e OCR
         allo stato dell'arte per erogare in modo efficiente il servizio
         richiesto dal committente.
 \end{itemize}
@@ -79,7 +79,7 @@ presenti in essi.
 \subsection{Glossario e Dominio applicativo}
 
 Il prodotto risponde all'esigenza di individuare la tipologia ed
-eseguire il riconoscimento dei prinicipali dati testuali esposti in vari
+eseguire il riconoscimento dei principali dati testuali esposti in vari
 documenti identificativi tramite webcam. I domini applicativi di tale
 sistema e le problematiche ad essi connesse sono sono quelli dell'ambito
 della computer vision e dell'OCR. L'utente finale avrà a disposizione
@@ -540,11 +540,11 @@ dizionari.
 \section{Design Pattern}
 
 Un design pattern che in potenza poterebbe essere applicato è il
-Protection Proxy. Inizialmente non eravamo convinti della thread safness
-della funzione \texttt{recognize} nella classe \texttt{Detectron}. Una
-possibile soluzione consisterebbe nel creare una classe
-\texttt{DetectronPool}, la quale nell'inizializzazione carica una pool
-di oggetti \texttt{Detectron}. Tale classe avrà un metodo
+Protection Proxy. Inizialmente non eravamo convinti della thread
+safeness della funzione \texttt{recognize} nella classe
+\texttt{Detectron}. Una possibile soluzione consisterebbe nel creare una
+classe \texttt{DetectronPool}, la quale nell'inizializzazione carica una
+pool di oggetti \texttt{Detectron}. Tale classe avrà un metodo
 \texttt{recognize} che rimanderà all'omonimo metodo di
 \texttt{Detectron}, il quale gestirebbe l'allocazione della risorsa al
 thread chiamante in modo trasparente tramite un semaforo contatore
@@ -906,8 +906,8 @@ class CustomDataset(utils.Dataset):
 \end{minted}
 
 Funzione di training.
-Si occupa delle operazioni di carimento dei dataset di
-training e validating ed esegue il trainig effuttuando tuning
+Si occupa delle operazioni di caricamento dei dataset di
+training e validating ed esegue il training effettuando tuning
 di alcuni parametri.
 
 \begin{minted}{python}
@@ -958,7 +958,7 @@ config = CustomConfig()
 config.display()
 \end{minted}
 
-Creiamo un modello in modalità training e carica i pesi MSCOCO per
+Creiamo un modello in modalità training e carica i pesi MS COCO per
 effettuare il transfer learning.
 
 \begin{minted}{python}
