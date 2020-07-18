@@ -20,7 +20,7 @@
 \title{Riconoscimento Documenti}
 \author{Simone Cimarelli \and Vittorio Mignini \and Luca Moroni}
 \date{9 luglio 2020}
-
+%\tableofcontents
 \maketitle
 
 \begin{abstract}
@@ -91,24 +91,40 @@ invece delegato a una componente ``business logic''. Il committente
 avrà la possibilità di configurare questa componente scegliendo il tipo
 di documenti da riconoscere e le caratteristiche testuali da ricercare.
 
-\section{Architettura del Sistema}
+\subsection{Diagramma di caso d'uso}
 
 In fase di revisione dei requisiti, siamo andati a definire con maggior
 precisione i requisiti funzionali del nostro applicativo tramite
 l'utilizzo del diagramma di caso d'uso.
 
-\subsection{Diagramma di caso d'uso}
-
 Tale diagramma, necessario nella prima fase di progettazione, ha
 permesso di definire quella che è a grandi linee la logica di
 funzionamento del nostro
-sistema per quanto riguarda il caso d'uso ``riconoscimento''.
+sistema per quanto riguarda i casi d'uso ``riconoscimento'' e ``configurazione''.
 
 \begin{figure}[H]
     \caption{Diagramma di Caso d'Uso}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
 \end{figure}
+
+\subsection{Specifica caso d'uso 'riconoscimento'}
+\begin{description}
+    \item[Attori] utente
+    \item[Precondizioni] l'utente ha posizionato a favore di camera un documento
+    \item[Sequenza degli eventi] il sistema processa lo stream video tramite primitive di object detection e OCR estrapolando i documenti in esso contenuti con i relativi dati testuali.
+    \item[Postcondizioni] l'utente avrà a disposizione i risultati
+\end{description}
+
+\subsection{Specifica caso d'uso 'configurazione'}
+\begin{description}
+    \item[Attori] admin
+    \item[Sequenza degli eventi] il sistema mette a disposizione dell'admin strumenti per l'aggiunta di nuove tipologie di documenti e per la modifica di eventuali impostazioni dello stesso
+    \item[Postcondizioni] le modifiche apportate al sistema e alle tipologie di documenti saranno confermate.
+\end{description}
+
+
+\section{Architettura del Sistema}
 
 \subsection{Scelte architetturali}
 
@@ -141,7 +157,7 @@ disposizione un ambiente virtuale contenente librerie in
 modo asettico rispetto a quelle di sistema e che rende ripetibile su
 altre macchine la configurazione da noi utilizzata con semplici
 passaggi. pyenv che invece mette a disposizione delle versioni di python
-da poter utilizzare al posto di quella di sistema quando per determinate 
+da poter utilizzare al posto di quella di sistema quando per determinate
 libreria quando una versione di python specifica.
 Ad esempio tensorflow$=$1.x è utilizzabile solamente con versioni di
 python$\leq$3.7.x con pyenv tale requisito può essere soddisfatto su
@@ -174,10 +190,8 @@ backbone.
 
 \subsection{Training}
 
---> rivedere %TODO
-
-Avendo deciso che la bussiness logic del nostro sistema si basa su una rete
-neurale per la computer vision implementata dalla libreria \mrcnn, cioè una
+Avendo deciso che la business logic del nostro sistema si basa su una rete
+neurale per effettuare la computer vision implementata dalla libreria \mrcnn, cioè una
 rete neurale molto complessa sulla quale facciamo transfer learning, ovvero
 alleniamo solamente gli strati più estrerni per adattare i pesi e la struttura
 della stessa al riconoscimento di un certo numero di classi definibili da noi
@@ -188,11 +202,11 @@ rendere ripetibile tutto ciò abbiamo reso disponibile il dataset da noi
 utilizzato e il file jupyter (tecnologia su cui si basa colab), così da poter
 ripetere la fase di training facendo l'opportuno tuning sui parametri e da
 poter anche aggiungere nuove classi di oggetti e nuove istanze per il training.
+Il dataset ,sotto forma di albero di directory, risiede all'interno di google drive, servizio compatibile con colab.
 Per un riscontro pratico si faccia riferimento al notebook Jupyter a
 fine report.\\
 Infine si rimanda al link dell'applicativo web necessario alla creazione di
-annotazioni per le immagini utilizzate come istanze di training.
-\url{http://www.robots.ox.ac.uk/~vgg/software/via/}
+annotazioni per le immagini utilizzate come istanze di training:\\ \url{http://www.robots.ox.ac.uk/~vgg/software/via/}.
 
 \subsubsection{Dataset}
 
