@@ -95,24 +95,40 @@ invece delegato a una componente ``business logic''. Il committente
 avrà la possibilità di configurare questa componente scegliendo il tipo
 di documenti da riconoscere e le caratteristiche testuali da ricercare.
 
-\section{Architettura del Sistema}
+\subsection{Diagramma di caso d'uso}
 
 In fase di revisione dei requisiti, siamo andati a definire con maggior
 precisione i requisiti funzionali del nostro applicativo tramite
 l'utilizzo del diagramma di caso d'uso.
 
-\subsection{Diagramma di caso d'uso}
-
 Tale diagramma, necessario nella prima fase di progettazione, ha
 permesso di definire quella che è a grandi linee la logica di
 funzionamento del nostro
-sistema per quanto riguarda il caso d'uso ``riconoscimento''.
+sistema per quanto riguarda i casi d'uso ``riconoscimento'' e ``configurazione''.
 
 \begin{figure}[H]
     \caption{Diagramma di Caso d'Uso}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{uml_use_case.pdf}
 \end{figure}
+
+\subsection{Specifica caso d'uso 'riconoscimento'}
+\begin{description}
+    \item[Attori] utente
+    \item[Precondizioni] l'utente ha posizionato a favore di camera un documento
+    \item[Sequenza degli eventi] il sistema processa lo stream video tramite primitive di object detection e OCR estrapolando i documenti in esso contenuti con i relativi dati testuali.
+    \item[Postcondizioni] l'utente avrà a disposizione i risultati
+\end{description}
+
+\subsection{Specifica caso d'uso 'configurazione'}
+\begin{description}
+    \item[Attori] admin
+    \item[Sequenza degli eventi] il sistema mette a disposizione dell'admin strumenti per l'aggiunta di nuove tipologie di documenti e per la modifica di eventuali impostazioni dello stesso
+    \item[Postcondizioni] le modifiche apportate al sistema e alle tipologie di documenti saranno confermate.
+\end{description}
+
+
+\section{Architettura del Sistema}
 
 \subsection{Scelte architetturali}
 
