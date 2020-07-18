@@ -4,13 +4,9 @@ SOURCES=config.py test_background.py test_patente.py test_tesserino.py via_regio
 
 .PHONY: all clean
 
-all: report.pdf report_v2.pdf
+all: report.pdf
 
-report.pdf: report.tex $(DIAGRAMS)
-	pdflatex -shell-escape $<
-	pdflatex -shell-escape $<
-
-report_v2.pdf: report_v2.tex $(SOURCES) $(IMAGES) $(DIAGRAMS)
+report.pdf: report.tex $(SOURCES) $(IMAGES) $(DIAGRAMS)
 	pdflatex -shell-escape $<
 	pdflatex -shell-escape $<
 
@@ -19,4 +15,4 @@ report_v2.pdf: report_v2.tex $(SOURCES) $(IMAGES) $(DIAGRAMS)
 	draw.io --crop -x -o $@ $<
 
 clean:
-	rm -rf report_v2.pdf report.pdf $(DIAGRAMS) *.aux *.log *.out *.lol *.lof *.toc _minted-*
+	rm -rf report.pdf $(DIAGRAMS) *.aux *.log *.out *.lol *.lof *.toc _minted-*
