@@ -11,21 +11,40 @@
 \setlength{\parindent}{2em}
 \setlength{\parskip}{1em}
 
-\setlength{\abovecaptionskip}{.8em plus .3em minus .3em}
-\setlength{\belowcaptionskip}{.8em plus .3em minus .3em}
+\setlength{\abovecaptionskip}{.5em plus .2em minus .2em}
+\setlength{\belowcaptionskip}{.5em plus .2em minus .2em}
 
 \setminted{encoding=utf-8,outencoding=utf-8,frame=lines,framesep=1em}
 \renewcommand{\listingscaption}{Listato}
+\renewcommand{\listoflistingscaption}{Elenco dei Listati}
+\renewcommand{\theFancyVerbLine}{
+    \sffamily\textcolor[rgb]{0, 0, 0}{
+        \small\arabic{FancyVerbLine}\hspace{-.8em}
+    }
+}
 
 \newcommand{\mrcnn}{Mask-R\_CNN}
 
-\title{Riconoscimento Documenti}
-\author{Simone Cimarelli \and Vittorio Mignini \and Luca Moroni}
-\date{9 luglio 2020}
-
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+    \centering
+    \includegraphics[width=5cm,keepaspectratio]{logo_unipg.png}\\
+    \vspace{.8cm}
+    \large\textsc{Università degli Studi di Perugia}\\
+    \vspace{1cm}
+    \Huge\textsc{Relazione}\\
+    \Large\textsc{del progetto di Ingegneria del Software}\\
+    \vspace{1.2cm}
+    \Huge Riconoscimento documenti\\
+    \vspace{.8cm}
+    \large Simone Cimarelli \qquad Vittorio Mignini \qquad Luca Moroni\\
+    \vspace{.5cm}
+    \large\today
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
 
 \begin{abstract}
     Si descrive l'implementazione di un applicativo che permette il
@@ -555,48 +574,54 @@ valido per verificarne il funzionamento.
 
 Di seguito si riportano i casi di test e i rispettivi output attesi.
 
-% TODO vedi impaginazione
-
-\begin{figure}[!htb]
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=.7\linewidth]{test_tesserino.jpg}
-     \caption{Caso di Test TESSERINO}\label{Fig:}
-   \end{minipage}\hfill
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=.7\linewidth]{test_tesserino_cutting.jpg}
-     \caption{Document Cutted}\label{Fig:}
-   \end{minipage}
+\begin{figure}[H]
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Caso di test \textit{tesserino}}
+        \includegraphics[width=\textwidth]{test_tesserino.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Possibile ROI per il caso di test \textit{tesserino}}
+        \includegraphics[width=\textwidth]{test_tesserino_snapshot.jpg}
+    \end{minipage}
 \end{figure}
 
-Output:
-\inputminted{python}{test_tesserino.py}
-
-\begin{figure}[!htb]
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=.7\linewidth]{test_patente.jpg}
-     \caption{Caso di Test PATENTE}\label{Fig:}
-   \end{minipage}\hfill
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=.7\linewidth]{test_patente_cutting.jpg}
-     \caption{Document Cutted}\label{Fig:}
-   \end{minipage}
-\end{figure}
-
-Output:
-\inputminted{python}{test_patente.py}
+\begin{listing}[H]
+    \caption{Output previsto per il caso di test \textit{tesserino}}
+    \inputminted{python}{test_tesserino.py}
+\end{listing}
 
 \begin{figure}[H]
-    \caption{Caso di test BG}
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Caso di Test \textit{patente}}
+        \includegraphics[width=\textwidth]{test_patente.jpg}
+    \end{minipage}\hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \caption{Possibile ROI per il caso di test \textit{patente}}
+        \includegraphics[width=\textwidth]{test_patente_snapshot.jpg}
+    \end{minipage}
+\end{figure}
+
+\begin{listing}[H]
+    \caption{Output previsto per il caso di test \textit{patente}}
+    \inputminted{python}{test_patente.py}
+\end{listing}
+
+\begin{figure}[H]
+    \caption{Caso di test \textit{nessun documento}}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{test_background.jpg}
 \end{figure}
 
-Output:
-\inputminted{python}{test_background.py}
+\begin{listing}[H]
+    \caption{Output previsto per il caso di test \textit{nessun documento}}
+    \inputminted{python}{test_background.py}
+\end{listing}
+
+Viene omesso il caso di test \textit{input invalido}.
 
 \pagebreak
 
@@ -619,7 +644,7 @@ Output:
     framesep=2mm
 }
 
-Segue una copia commentata di un notebook Jupyter che è stato utilizzato
+Segue una copia commentata del notebook Jupyter che è stato utilizzato
 per eseguire il training del dataset di esempio in Google Colab. Per
 l'ultima versione dell'originale consultare la repo git.
 
@@ -1016,7 +1041,7 @@ print(r['rois'])
 
 \pagebreak
 
-\textbf{Output}:
+\textbf{\large Output:}
 
 \begin{minted}{text}
 Processing 1 images
@@ -1028,7 +1053,7 @@ anchors       shape: (1, 261888, 4)     min:   -0.35390 max:    1.29134 float32
 \end{minted}
 
 \begin{figure}[H]
-    \caption{Esito del Test}
+    \caption{Esito del test manuale}
     \centering
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{document_recognition_29_1.png}
 \end{figure}
@@ -1036,5 +1061,9 @@ anchors       shape: (1, 261888, 4)     min:   -0.35390 max:    1.29134 float32
 \begin{minted}{text}
 [[107 245 296 577]]
 \end{minted}
+
+\pagebreak
+\listoffigures
+\listoflistings
 
 \end{document}
